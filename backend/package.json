@@ -1,23 +1,26 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@prisma/client": "^6.7.0",
-    "@prisma/extension-accelerate": "^1.3.0",
-    "hono": "^4.7.9",
-    "prisma": "^6.7.0",
-    "zod": "^3.24.4"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250510.0",
-    "wrangler": "^4.14.4"
-  }
+	"name": "backend",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"cf-typegen": "wrangler types"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.8.19",
+		"@cloudflare/workers-types": "^4.20250510.0",
+		"typescript": "^5.5.2",
+		"vitest": "~3.0.7",
+		"wrangler": "^4.14.4"
+	},
+	"dependencies": {
+		"@prisma/client": "^6.7.0",
+		"@prisma/extension-accelerate": "^1.3.0",
+		"hono": "^4.7.9",
+		"prisma": "^6.7.0",
+		"zod": "^3.24.4"
+	}
 }
