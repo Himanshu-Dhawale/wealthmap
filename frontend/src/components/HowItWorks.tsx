@@ -33,7 +33,6 @@ const steps = [
           </div>
   
           <div className="relative">
-            {/* Connection line */}
             <div className="hidden md:block absolute top-24 left-0 right-0 h-1 bg-wealth-secondary/30 z-0"></div>
   
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">

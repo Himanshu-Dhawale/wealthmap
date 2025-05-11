@@ -21,8 +21,6 @@ const FeaturesList = () => {
               </div>
               <p className="text-sm text-muted-foreground">Static feature description goes here.</p>
             </div>
-  
-            {/* Repeat the above block for more features */}
           </div>
         </div>
       </section>

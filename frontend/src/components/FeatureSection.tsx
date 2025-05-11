@@ -5,7 +5,6 @@ const FeatureItem = () => {
           <div className="md:w-1/2">
             <div className="bg-wealth-secondary/10 p-8 rounded-2xl shadow-lg">
               <div className="rounded-full bg-wealth-secondary w-16 h-16 flex items-center justify-center mb-6">
-                {/* Icon Placeholder */}
                 <span className="text-white text-xl">★</span>
               </div>
               <h2 className="text-2xl font-bold mb-4 text-wealth-primary">Feature Title</h2>
@@ -42,7 +41,6 @@ const FeatureItem = () => {
             </p>
           </div>
   
-          {/* Feature items */}
           <FeatureItem />
           <FeatureItem />
           <FeatureItem />

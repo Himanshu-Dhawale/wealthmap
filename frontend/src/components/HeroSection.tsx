@@ -1,7 +1,6 @@
 const HeroSection = () => {
     return (
       <section className="relative flex-grow flex items-center">
-        {/* Background with gradient overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center z-0" 
           style={{ 
@@ -10,8 +9,6 @@ const HeroSection = () => {
         >
           <div className="absolute inset-0 bg-wealth-primary/75"></div>
         </div>
-        
-        {/* Content */}
         <div className="container mx-auto px-4 py-16 relative z-10 text-white flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-10 md:mb-0">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
