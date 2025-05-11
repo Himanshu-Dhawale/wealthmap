@@ -1,53 +1,73 @@
-const FeatureItem = () => {
-    return (
-      <div className="mb-16">
-        <div className="flex flex-col md:flex-row gap-8 items-center">
-          <div className="md:w-1/2">
-            <div className="bg-wealth-secondary/10 p-8 rounded-2xl shadow-lg">
-              <div className="rounded-full bg-wealth-secondary w-16 h-16 flex items-center justify-center mb-6">
-                <span className="text-white text-xl">★</span>
+import { IFeatures } from "@/types/types";
+import { motion } from "framer-motion";
+import { Building, CircleDollarSign, Map } from "lucide-react";
+
+const features: IFeatures[] = [
+  {
+    title: "Comprehensive Ownership Data",
+    description:
+      "Access detailed records of property owners including contact information and ownership history.",
+    icon: <Building className="text-blue-600" />,
+  },
+  {
+    title: "Net Worth Estimation",
+    description:
+      "Our AI models estimate property owner net worth based on multiple financial indicators.",
+    icon: <CircleDollarSign className="text-purple-600" />,
+  },
+  {
+    title: "Interactive Mapping",
+    description:
+      "Visualize property data with our intuitive mapping interface and advanced filtering.",
+    icon: <Map className="text-blue-600" />,
+  },
+];
+
+const FeatureSection = () => {
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            Powerful Features for{" "}
+            <span className="bg-primary-gradient bg-clip-text text-transparent">
+              Property Intelligence
+            </span>
+          </h2>
+          <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+            WealthMap combines multiple data sources to give you the most
+            comprehensive property insights available.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-all"
+            >
+              <div className="w-12 h-12 bg-white rounded-lg shadow-sm flex items-center justify-center mb-6">
+                {feature.icon}
               </div>
-              <h2 className="text-2xl font-bold mb-4 text-wealth-primary">Feature Title</h2>
-              <p className="text-muted-foreground">Feature description goes here.</p>
-            </div>
-          </div>
-  
-          <div className="md:w-1/2">
-            <div className="relative rounded-xl overflow-hidden shadow-xl bg-wealth-light/5 aspect-video">
-              <div className="absolute inset-0 bg-gradient-to-r from-wealth-primary to-wealth-secondary opacity-20" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center p-6">
-                  <h3 className="text-xl font-semibold mb-2 text-wealth-primary">Feature Title</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Interactive visualization example
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600">{feature.description}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
-    );
-  };
-  
-  const FeatureSection = () => {
-    return (
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-wealth-primary">Comprehensive Platform Features</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Discover how our platform can transform your property insights and wealth data analysis
-            </p>
-          </div>
-  
-          <FeatureItem />
-          <FeatureItem />
-          <FeatureItem />
-        </div>
-      </section>
-    );
-  };
-  
-  export default FeatureSection;
-  
+    </section>
+  );
+};
+export default FeatureSection;
