@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 
 const HeroSection = () => {
@@ -72,6 +73,7 @@ const HeroSection = () => {
               transition={{ duration: 0.5, delay: 0.8 }}
               className="flex flex-col sm:flex-row gap-4 pt-2"
             >
+              <Link href={'/signup'}>
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -79,6 +81,7 @@ const HeroSection = () => {
               >
                 Request Demo
               </motion.button>
+              </Link>
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}

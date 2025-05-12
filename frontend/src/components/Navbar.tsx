@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useState } from "react";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,13 +30,15 @@ const Navbar = () => {
                 {item}
               </motion.a>
             ))}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-primary-gradient text-white rounded-lg font-medium shadow-md"
-            >
-              Request Demo
-            </motion.button>
+            <Link href={"/signup"}>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 bg-primary-gradient text-white rounded-lg font-medium shadow-md"
+              >
+                Request Demo
+              </motion.button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -91,12 +94,14 @@ const Navbar = () => {
                   {item}
                 </motion.a>
               ))}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                className="w-full mt-2 px-4 py-2 bg-primary-gradient text-white rounded-lg font-medium shadow-md"
-              >
-                Request Demo
-              </motion.button>
+              <Link href={"/signup"}>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full mt-2 px-4 py-2 bg-primary-gradient text-white rounded-lg font-medium shadow-md"
+                >
+                  Request Demo
+                </motion.button>
+              </Link>
             </div>
           </motion.div>
         )}
