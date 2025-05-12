@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const CtaSection = () => {
   return (
@@ -19,13 +20,15 @@ const CtaSection = () => {
             Join thousands of real estate professionals who use WealthMap to
             make data-driven decisions.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="mt-8 px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
-          >
-            Request a Demo
-          </motion.button>
+          <Link href={"/signup"}>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="mt-8 px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+            >
+              Request a Demo
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>
