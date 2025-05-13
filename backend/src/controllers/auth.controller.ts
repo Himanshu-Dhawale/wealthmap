@@ -3,18 +3,16 @@ import { Jwt } from 'hono/utils/jwt'
 import { hashPassword } from '../utils/auth.utils'
 import { getPrismaClient } from '../utils/prisma'
 import { LoginSchema, RegisterSchema } from '../schema/auth.schema'
+import { uploadToCloudinary } from '../utils/cloudinary'
 
 export async function registerCompany(c: Context) {
 	try {
 		const validation = RegisterSchema.safeParse(await c.req.json())
 		if (!validation.success) {
-			return c.json({
-				message: 'Validation failed',
-				errors: validation.error.flatten()
-			}, 400)
+			return c.json({ message: 'Validation failed', errors: validation.error.flatten() }, 400)
 		}
 
-		const { name, email, password } = validation.data
+		const { name, email, password, logo, firstName, lastName, size, location } = validation.data
 		const prisma = getPrismaClient(c.env.DATABASE_URL)
 
 		const existingUser = await prisma.user.findUnique({ where: { email } })
@@ -22,20 +20,30 @@ export async function registerCompany(c: Context) {
 			return c.json({ message: 'Email already in use' }, 409)
 		}
 
-		const company = await prisma.company.create({ data: { name } })
+		let logoUrl: string | undefined
+		if (logo) {
+			const uploadResult = await uploadToCloudinary(logo)
+			logoUrl = uploadResult.secure_url
+		}
+
+		const company = await prisma.company.create({
+			data: { name, logoUrl, size, location }
+		})
 
 		const user = await prisma.user.create({
 			data: {
 				email,
 				passwordHash: await hashPassword(password),
 				role: 'ADMIN',
-				companyId: company.id
+				companyId: company.id,
+				firstName,
+				lastName,
 			}
 		})
 
 		const token = await Jwt.sign(
 			{ userId: user.id, role: user.role },
-			c.env.JWT_SECRET,
+			c.env.JWT_SECRET
 		)
 
 		return c.json({
@@ -50,9 +58,7 @@ export async function registerCompany(c: Context) {
 
 	} catch (error) {
 		console.error('Registration Error:', error)
-		return c.json({
-			message: 'Registration failed due to server error',
-		}, 500)
+		return c.json({ message: 'Registration failed due to server error' }, 500)
 	}
 }
 
