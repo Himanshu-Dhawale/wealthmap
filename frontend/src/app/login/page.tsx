@@ -2,15 +2,9 @@
 import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import Link from "next/link";
 import { LoginFormData } from "@/types/types";
-
-export const loginSchema = z.object({
-  email: z.string().email("Invalid email address").min(1, "Email is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  remember: z.boolean().optional(),
-});
+import { loginSchema } from "@/schema/loginSchema";
 
 const LoginPage = () => {
   const {
