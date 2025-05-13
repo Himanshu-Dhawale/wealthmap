@@ -8,142 +8,47 @@ datasource db {
 }
 
 model Company {
-  id        String   @id @default(uuid())
-  name      String
-  logoUrl   String?
-  users     User[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  Invitation Invitation[]
+  id           String   @id @default(uuid())
+  name         String
+  logoUrl      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  users        User[]
+  invitations  Invitation[]
+  preferences  Json?
 }
 
 model User {
-  id             String    @id @default(uuid())
-  company        Company   @relation(fields: [companyId], references: [id])
-  companyId      String
-  email          String    @unique
+  id             String   @id @default(uuid())
+  email          String   @unique
   passwordHash   String
   role           Role
-  mfaEnabled     Boolean   @default(false)
-  isActive       Boolean   @default(true)
-  bookmarks      Bookmark[]
-  reports        Report[]
-  savedSearches  SavedSearch[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  isActive       Boolean  @default(true)
+  mfaEnabled     Boolean  @default(false)
+  acceptedTerms  Boolean  @default(false)
+  companyId      String
+  company        Company  @relation(fields: [companyId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Invitation {
-  id          String   @id @default(uuid())
-  company     Company  @relation(fields: [companyId], references: [id])
-  companyId   String
-  email       String
-  token       String   @unique
-  expiresAt   DateTime
-  acceptedAt  DateTime?
-}
-
-model Property {
-  id             String       @id @default(uuid())
-  address        String
-  city           String
-  state          String
-  zipcode        String
-  propertyType   String
-  sizeSqft       Int?
-  estimatedValue Float?
-  zillowId       String?
-  ownerships     PropertyOwnership[]
-  transactions   Transaction[]
-  images         PropertyImage[]
-  bookmarks      Bookmark[]
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-}
-
-model PropertyImage {
   id         String   @id @default(uuid())
-  property   Property @relation(fields: [propertyId], references: [id])
-  propertyId String
-  imageUrl   String
-  description String?
-}
-
-model Owner {
-  id                   String       @id @default(uuid())
-  name                 String
-  type                 OwnerType
-  netWorthEstimate     Float?
-  netWorthConfidence   Int?
-  wealthLastUpdated    DateTime?
-  source               String?
-  ownerships           PropertyOwnership[]
-  transactions         Transaction[]
-}
-
-model PropertyOwnership {
-  id             String   @id @default(uuid())
-  property       Property @relation(fields: [propertyId], references: [id])
-  propertyId     String
-  owner          Owner    @relation(fields: [ownerId], references: [id])
-  ownerId        String
-  startDate      DateTime
-  endDate        DateTime?
-  ownershipType  String
-}
-
-model Transaction {
-  id               String   @id @default(uuid())
-  property         Property @relation(fields: [propertyId], references: [id])
-  propertyId       String
-  owner            Owner    @relation(fields: [ownerId], references: [id])
-  ownerId          String
-  transactionDate  DateTime
-  price            Float
-  transactionType  String
-  source           String?
-}
-
-model Bookmark {
-  id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  property   Property @relation(fields: [propertyId], references: [id])
-  propertyId String
+  email      String
+  companyId  String
+  company    Company  @relation(fields: [companyId], references: [id])
+  status     InviteStatus @default(PENDING)
   createdAt  DateTime @default(now())
-}
-
-model SavedSearch {
-  id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  name       String
-  filters    Json
-  createdAt  DateTime @default(now())
-}
-
-model Report {
-  id          String   @id @default(uuid())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  title       String
-  data        Json
-  format      ReportFormat
-  createdAt   DateTime @default(now())
+  acceptedAt DateTime?
 }
 
 enum Role {
-  admin
-  employee
+  ADMIN
+  EMPLOYEE
 }
 
-enum OwnerType {
-  individual
-  company
-}
-
-enum ReportFormat {
-  pdf
-  csv
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
 }
