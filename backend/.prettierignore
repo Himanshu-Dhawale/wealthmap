@@ -5,3 +5,7 @@ build
 *.html
 .wrangler/
 wrangler.toml
+tsconfig.json
+worker-configuration.d.ts
+settings.json
+
