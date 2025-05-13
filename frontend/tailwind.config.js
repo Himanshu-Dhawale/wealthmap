@@ -9,7 +9,18 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'primary-gradient': 'linear-gradient(to right, #2563eb , #9333ea)', // Define the gradient
+      },
+      colors: {
+        'blue-gradient-start': '#2563eb', // Optional: Define individual colors if needed
+        'purple-gradient-end': '#9333ea',   // Optional: Define individual colors if needed
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+    },
   },
   plugins: [],
 }
