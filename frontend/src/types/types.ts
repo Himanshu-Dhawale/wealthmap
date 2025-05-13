@@ -1,5 +1,5 @@
-import { loginSchema } from "@/app/login/page";
-import { signupSchema } from "@/app/signup/page";
+import { loginSchema } from "@/schema/loginSchema";
+import { signupSchema } from "@/schema/signupSchema";
 import { ReactElement } from "react";
 import { z } from "zod";
 
