@@ -1,59 +1,34 @@
 "use client";
-import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm, FormProvider } from "react-hook-form";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useState } from "react";
+import { Check } from "lucide-react";
+import { signupSchema } from "@/schema/signupSchema";
 import { SignupFormData } from "@/types/types";
-import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
+import RegisterAdminForm from "@/components/RegisterAdminForm";
+import CompanyRegisterForm from "@/components/CompanyRegisterForm";
 
-export const signupSchema = z
-  .object({
-    firstName: z.string().min(1, "FirstName is required").max(50),
-    lastName: z.string().min(1, "LastName is required").max(50),
-    email: z
-      .string()
-      .email("Invalid email address")
-      .min(1, "Email is required"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/\d/, "Password must contain at least one number")
-      .regex(
-        /[^A-Za-z0-9]/,
-        "Password must contain at least one special character"
-      ),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-    terms: z.literal(true, {
-      errorMap: () => ({ message: "You must accept the terms and conditions" }),
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
+const SignupForm = () => {
+  const [step, setStep] = useState(1);
+  const methods = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    mode: "onChange",
   });
-
-const SignupPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-  } = useForm<SignupFormData>({ resolver: zodResolver(signupSchema) });
+  const { handleSubmit } = methods;
 
   const onSubmit = (data: SignupFormData) => {
-    console.log(data);
+    console.log("Form data:", data);
   };
-  const password = watch("password");
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-2xl"
       >
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header */}
@@ -70,232 +45,64 @@ const SignupPage = () => {
             </motion.div>
           </div>
 
+          {/* Stepper */}
+          <div className="px-8 pt-6">
+            <div className="flex items-center justify-between">
+              <div
+                className={`flex items-center ${
+                  step >= 1 ? "text-blue-600" : "text-gray-400"
+                }`}
+              >
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    step >= 1 ? "bg-blue-100" : "bg-gray-100"
+                  }`}
+                >
+                  {step >= 1 ? <Check size={18} /> : <span>1</span>}
+                </div>
+                <span className="ml-2 text-sm font-medium">Admin Details</span>
+              </div>
+
+              <div className="flex-1 h-0.5 mx-2 bg-gray-200">
+                <div
+                  className={`h-full transition-all duration-300 ${
+                    step >= 2 ? "bg-blue-600" : "bg-gray-200"
+                  }`}
+                ></div>
+              </div>
+
+              <div
+                className={`flex items-center ${
+                  step >= 2 ? "text-blue-600" : "text-gray-400"
+                }`}
+              >
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    step >= 2 ? "bg-blue-100" : "bg-gray-100"
+                  }`}
+                >
+                  {step >= 2 ? <Check size={18} /> : <span>2</span>}
+                </div>
+                <span className="ml-2 text-sm font-medium">
+                  Company Details
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Form */}
           <div className="p-8">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
-              >
-                <div>
-                  <label
-                    htmlFor="firstName"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    First Name
-                  </label>
-                  <input
-                    id="firstName"
-                    type="text"
-                    className={`w-full px-4 py-3 rounded-lg outline-none border ${
-                      errors.firstName ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all`}
-                    placeholder="John"
-                    {...register("firstName")}
-                  />
-                  {errors.firstName && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.firstName.message}
-                    </p>
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <AnimatePresence mode="wait">
+                  {step === 1 ? (
+                    <RegisterAdminForm setStep={setStep} />
+                  ) : (
+                    <CompanyRegisterForm setStep={setStep} />
                   )}
-                </div>
-                <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    id="lastName"
-                    type="text"
-                    className={`w-full px-4 py-3 rounded-lg outline-none border ${
-                      errors.lastName ? "border-red-500" : "border-gray-300"
-                    } focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all`}
-                    placeholder="Doe"
-                    {...register("lastName")}
-                  />
-                  {errors.lastName && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.lastName.message}
-                    </p>
-                  )}
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-              >
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  className={`w-full px-4 py-3 rounded-lg outline-none border ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  } focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all`}
-                  placeholder="you@example.com"
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.email.message}
-                  </p>
-                )}
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-              >
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  className={`w-full px-4 py-3 rounded-lg outline-none border ${
-                    errors.password ? "border-red-500" : "border-gray-300"
-                  } focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all`}
-                  placeholder="••••••••"
-                  {...register("password")}
-                />
-                {password && (
-                  <div className="mt-2">
-                    <PasswordStrengthIndicator password={password} />
-                  </div>
-                )}
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.password.message}
-                  </p>
-                )}
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 1 }}
-              >
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Confirm Password
-                </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  className={`w-full px-4 py-3 rounded-lg outline-none border ${
-                    errors.confirmPassword
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all`}
-                  placeholder="••••••••"
-                  {...register("confirmPassword")}
-                />
-                {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 1.2 }}
-                className="flex items-start"
-              >
-                <div className="flex items-center h-5">
-                  <input
-                    id="terms"
-                    type="checkbox"
-                    className={`h-4 w-4 ${
-                      errors.terms ? "text-red-600" : "text-blue-600"
-                    } focus:ring-blue-500 border-gray-300 rounded`}
-                    {...register("terms")}
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label
-                    htmlFor="terms"
-                    className={`font-medium ${
-                      errors.terms ? "text-red-600" : "text-gray-700"
-                    }`}
-                  >
-                    I agree to the{" "}
-                    <Link
-                      href="/terms"
-                      className="text-blue-600 hover:underline"
-                    >
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link
-                      href="/privacy"
-                      className="text-blue-600 hover:underline"
-                    >
-                      Privacy Policy
-                    </Link>
-                  </label>
-                  {errors.terms && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.terms.message}
-                    </p>
-                  )}
-                </div>
-              </motion.div>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary-gradient text-white py-3 px-4 rounded-lg font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-                transition={{ duration: 0.3 }}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Creating account...
-                  </span>
-                ) : (
-                  "Create Account"
-                )}
-              </motion.button>
-            </form>
+                </AnimatePresence>
+              </form>
+            </FormProvider>
 
             <motion.div
               initial={{ opacity: 0 }}
@@ -329,4 +136,4 @@ const SignupPage = () => {
     </div>
   );
 };
-export default SignupPage;
+export default SignupForm;
