@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { LoginFormData } from "@/types/types";
 import { loginSchema } from "@/schema/loginSchema";
+import { signIn } from "next-auth/react";
 
 const LoginPage = () => {
   const {
@@ -13,20 +14,24 @@ const LoginPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await signIn("credentials", { ...data, redirect: false });
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden bg-white shadow-xl rounded-2xl">
           {/* Header */}
-          <div className="bg-primary-gradient p-8 text-center">
+          <div className="p-8 text-center bg-primary-gradient">
             <motion.div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
@@ -49,7 +54,7 @@ const LoginPage = () => {
               >
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block mb-1 text-sm font-medium text-gray-700"
                 >
                   Email Address
                 </label>
@@ -74,7 +79,7 @@ const LoginPage = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
               >
-                <div className="flex justify-between items-center mb-1">
+                <div className="flex items-center justify-between mb-1">
                   <label
                     htmlFor="password"
                     className="block text-sm font-medium text-gray-700"
@@ -113,12 +118,12 @@ const LoginPage = () => {
                 <input
                   id="remember"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   {...register("remember")}
                 />
                 <label
                   htmlFor="remember"
-                  className="ml-2 block text-sm text-gray-700"
+                  className="block ml-2 text-sm text-gray-700"
                 >
                   Remember me
                 </label>
@@ -129,13 +134,13 @@ const LoginPage = () => {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-primary-gradient text-white py-3 px-4 rounded-lg font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 font-medium text-white transition-all rounded-lg shadow-md bg-primary-gradient hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
                 transition={{ duration: 0.3 }}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">
                     <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      className="w-4 h-4 mr-2 -ml-1 text-white animate-spin"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -172,7 +177,7 @@ const LoginPage = () => {
                 Don't have an account?{" "}
                 <Link
                   href="/signup"
-                  className="text-blue-600 font-medium hover:underline"
+                  className="font-medium text-blue-600 hover:underline"
                 >
                   Sign up
                 </Link>
@@ -186,7 +191,7 @@ const LoginPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 1.2 }}
-          className="mt-8 text-center text-sm text-gray-500"
+          className="mt-8 text-sm text-center text-gray-500"
         >
           <p>© {new Date().getFullYear()} WealthMap. All rights reserved.</p>
         </motion.div>
