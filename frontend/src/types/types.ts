@@ -25,3 +25,40 @@ export interface ISteps {
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
+
+export type PropertyType = 'residential' | 'commercial' | 'land' | 'all';
+
+export type Property = {
+  id: string;
+  title: string;
+  lat: number;
+  lng: number;
+  price: number;
+  area: number;
+  address: string;
+  type: PropertyType;
+  owner: string;
+  netWorth?: number;
+  lastSoldPrice?: number;
+  yearBuilt?: number;
+  image?: string;
+  // Add more fields as needed
+};
+
+export type MapState = {
+  selectedProperty: Property | null;
+  setSelectedProperty: (p: Property | null) => void;
+  properties: Property[];
+  setProperties: (props: Property[]) => void;
+  filteredProperties: Property[];
+  mapStyle: 'streets' | 'satellite';
+  toggleMapStyle: () => void;
+  priceRange: [number, number];
+  setPriceRange: (range: [number, number]) => void;
+  propertyType: PropertyType;
+  setPropertyType: (type: PropertyType) => void;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  filterProperties: () => void;
+  isLoading: boolean;
+};
