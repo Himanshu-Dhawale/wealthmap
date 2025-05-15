@@ -1,11 +1,11 @@
-import { Context } from "hono";
-import { getPrismaClient } from "../utils/prisma";
-import { UpdateCompanyProfileSchema } from "../schema/company.schema";
+import { Context } from 'hono';
+import { getPrismaClient } from '../utils/prisma';
+import { UpdateCompanyProfileSchema } from '../schema/company.schema';
 
 export async function getCompanyProfile(c: Context) {
 	try {
-		const { companyId } = c.get('jwtPayload')
-		const prisma = getPrismaClient(c.env.DATABASE_URL)
+		const { companyId } = c.get('jwtPayload');
+		const prisma = getPrismaClient(c.env.DATABASE_URL);
 
 		const company = await prisma.company.findUnique({
 			where: { id: companyId },
@@ -17,25 +17,25 @@ export async function getCompanyProfile(c: Context) {
 				location: true,
 				preferences: true,
 				createdAt: true,
-				updatedAt: true
-			}
-		})
+				updatedAt: true,
+			},
+		});
 
 		if (!company) {
-			return c.json({ message: 'Company not found' }, 404)
+			return c.json({ message: 'Company not found' }, 404);
 		}
 
-		return c.json({ company }, 200)
+		return c.json({ company }, 200);
 	} catch (error) {
-		console.error('Error fetching company profile:', error)
-		return c.json({ message: 'Internal server error' }, 500)
+		console.error('Error fetching company profile:', error);
+		return c.json({ message: 'Internal server error' }, 500);
 	}
 }
 
 export async function getCompanyTeam(c: Context) {
 	try {
-		const { companyId } = c.get('jwtPayload')
-		const prisma = getPrismaClient(c.env.DATABASE_URL)
+		const { companyId } = c.get('jwtPayload');
+		const prisma = getPrismaClient(c.env.DATABASE_URL);
 
 		const users = await prisma.user.findMany({
 			where: { companyId },
@@ -45,66 +45,59 @@ export async function getCompanyTeam(c: Context) {
 				lastName: true,
 				email: true,
 				role: true,
-				isActive: true
-			}
-		})
+				isActive: true,
+			},
+		});
 
-		return c.json({ users }, 200)
+		return c.json({ users }, 200);
 	} catch (error) {
-		console.error('Error fetching company team:', error)
-		return c.json({ message: 'Internal server error' }, 500)
+		console.error('Error fetching company team:', error);
+		return c.json({ message: 'Internal server error' }, 500);
 	}
 }
 
 export async function updateCompanyProfile(c: Context) {
 	try {
-		const body = await c.req.json()
-		const { success, data, error: validationError } = UpdateCompanyProfileSchema.safeParse(body)
-		if (
-			!success) {
-			return c.json({ message: 'Validation failed', errors: validationError.flatten() }, 400)
+		const body = await c.req.json();
+		const { success, data, error: validationError } = UpdateCompanyProfileSchema.safeParse(body);
+		if (!success) {
+			return c.json({ message: 'Validation failed', errors: validationError.flatten() }, 400);
 		}
-		const { companyId } = c.get('jwtPayload')
-		const prisma = getPrismaClient(c.env.DATABASE_URL)
+		const { companyId } = c.get('jwtPayload');
+		const prisma = getPrismaClient(c.env.DATABASE_URL);
 		const company = await prisma.company.update({
 			where: { id: companyId },
-			data
-		})
-		return c.json({ message: 'Company updated', company })
-
-	}
-	catch (error) {
-		console.error('Update company error:', error)
-		return c.json({ message: 'Internal server error' }, 500)
-
+			data,
+		});
+		return c.json({ message: 'Company updated', company });
+	} catch (error) {
+		console.error('Update company error:', error);
+		return c.json({ message: 'Internal server error' }, 500);
 	}
 }
 
 export async function deactivateEmployee(c: Context) {
 	try {
-		const { companyId } = c.get('jwtPayload')
-		const prisma = getPrismaClient(c.env.DATABASE_URL)
+		const { companyId } = c.get('jwtPayload');
+		const prisma = getPrismaClient(c.env.DATABASE_URL);
 
-		const userId = c.req.param('id')
+		const userId = c.req.param('id');
 		const user = await prisma.user.findFirst({
-			where: { id: userId, companyId }
-		})
+			where: { id: userId, companyId },
+		});
 
 		if (!user) {
-			return c.json({ message: 'User not found' }, 404)
+			return c.json({ message: 'User not found' }, 404);
 		}
 
 		const updated = await prisma.user.update({
 			where: { id: userId },
-			data: { isActive: false }
-		})
+			data: { isActive: false },
+		});
 
-		return c.json({ message: 'User deactivated', user: updated })
-
-	}
-	catch (error) {
-		console.error('Deactivate employee error:', error)
-		return c.json({ message: 'Internal server error' }, 500)
-
+		return c.json({ message: 'User deactivated', user: updated });
+	} catch (error) {
+		console.error('Deactivate employee error:', error);
+		return c.json({ message: 'Internal server error' }, 500);
 	}
 }
