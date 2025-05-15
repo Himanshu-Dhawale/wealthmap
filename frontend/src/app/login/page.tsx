@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { LoginFormData } from "@/types/types";
 import { loginSchema } from "@/schema/loginSchema";
-import { signIn } from "next-auth/react";
+import { loggingInUser } from "../../lib/utils";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const {
@@ -13,10 +14,12 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
+  const router = useRouter();
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await signIn("credentials", { ...data, redirect: false });
+      await loggingInUser({ ...data, redirect: false });
+      router.push("/");
     } catch (err) {
       console.error(err);
     }

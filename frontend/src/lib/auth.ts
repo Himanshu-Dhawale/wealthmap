@@ -84,18 +84,16 @@ export const NEXT_AUTH: AuthOptions = {
     async session({ session, token }) {
       session.user = {
         ...session.user,
-        id: token.id as string,
-        email: token.email as string,
-        role: token.role as string,
-        companyId: token.companyId as string,
-        accessToken: token.accessToken as string
+        id: token.id,
+        email: token.email,
+        role: token.role,
+        companyId: token.companyId,
+        accessToken: token.accessToken
       };
       return session;
     },
   },
   pages: {
     signIn: '/login',
-    error: '/login?error=true'
   },
-  debug: process.env.NODE_ENV === 'development',
 };
