@@ -9,6 +9,11 @@ import { signupSchema } from "@/schema/signupSchema";
 import { SignupFormData } from "@/types/types";
 import RegisterAdminForm from "@/components/RegisterAdminForm";
 import CompanyRegisterForm from "@/components/CompanyRegisterForm";
+import { postReq } from "../../lib/axios-helpers/apiClient";
+import { SIGNUP } from "../../endpoints/auth";
+import { fileToBase64, loggingInUser } from "../../lib/utils";
+import { SignInPayload } from "../../types/auth/login";
+import { useRouter } from "next/navigation";
 
 const SignupForm = () => {
   const [step, setStep] = useState(1);
@@ -17,22 +22,58 @@ const SignupForm = () => {
     mode: "onChange",
   });
   const { handleSubmit } = methods;
+  const router = useRouter();
 
-  const onSubmit = (data: SignupFormData) => {
-    console.log("Form data:", data);
+  const onSubmit = async (data: SignupFormData) => {
+    const payload = {
+      email: data.email,
+      password: data.password,
+      name: data.companyName,
+      logo: "",
+      firstName: data.firstName,
+      lastName: data.lastName,
+      size: data.companySize,
+      location: data.location,
+    };
+
+    try {
+      if (!data.logo) {
+        throw new Error("Logo is required");
+      }
+      payload.logo = await fileToBase64(data.logo);
+      const response = await postReq<{ email: string; password: string }>(
+        SIGNUP,
+        payload
+      );
+      if (response.status === 201) {
+        const userPayload: SignInPayload = {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        };
+        try {
+          await loggingInUser(userPayload);
+          router.push("/");
+        } catch (err) {
+          console.error(err, "Something went wrong, please login...");
+        }
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-2xl"
       >
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden bg-white shadow-xl rounded-2xl">
           {/* Header */}
-          <div className="bg-primary-gradient p-8 text-center">
+          <div className="p-8 text-center bg-primary-gradient">
             <motion.div
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
@@ -114,7 +155,7 @@ const SignupForm = () => {
                 Already have an account?{" "}
                 <Link
                   href="/login"
-                  className="text-blue-600 font-medium hover:underline"
+                  className="font-medium text-blue-600 hover:underline"
                 >
                   Sign in
                 </Link>
@@ -128,7 +169,7 @@ const SignupForm = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 1.6 }}
-          className="mt-8 text-center text-sm text-gray-500"
+          className="mt-8 text-sm text-center text-gray-500"
         >
           <p>© {new Date().getFullYear()} WealthMap. All rights reserved.</p>
         </motion.div>
