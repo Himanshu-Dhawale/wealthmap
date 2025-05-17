@@ -41,7 +41,6 @@ const PropertyMap = () => {
 
     mapRef.current.on("load", () => {
       setIsMapLoaded(true);
-      // Load sample data
       setProperties([
         {
           id: "1",
@@ -74,7 +73,6 @@ const PropertyMap = () => {
           image:
             "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
         },
-        // More properties...
       ]);
     });
 
@@ -149,7 +147,7 @@ const PropertyMap = () => {
   return (
     <div
       ref={mapContainer}
-      className="h-[80vh] w-full rounded-xl shadow-lg relative"
+      className="h-full w-full rounded-xl shadow-lg relative"
     />
   );
 };
