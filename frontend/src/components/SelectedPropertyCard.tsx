@@ -30,7 +30,7 @@ const SelectedPropertyCard = () => {
   if (!selectedProperty) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 md:right-auto md:w-96 z-50 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+    <div className="fixed bottom-4 right-4 md:right-8 w-full max-w-sm z-50 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
       <div className="relative">
         {selectedProperty.image ? (
           <img
