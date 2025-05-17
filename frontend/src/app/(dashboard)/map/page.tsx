@@ -1,38 +1,24 @@
-// // app/(dashboard)/map/page.tsx
-// import PropertyMap from '@/components/PropertyMap';
-// import SelectedPropertyCard from '@/components/SelectedPropertyCard';
-// const MapPage = () => {
-//   return (
-//     <div className="p-4">
-//       <h1 className="text-2xl font-semibold mb-4">Explore Properties</h1>
-//       <PropertyMap />
-//       <SelectedPropertyCard />
-//     </div>
-//   );
-// }
-// export default MapPage;
-
-
-
-
-
-
-import PropertyMap from '@/components/PropertyMap';
-import SelectedPropertyCard from '@/components/SelectedPropertyCard';
-import MapFilters from '@/components/MapFilters';
+import PropertyMap from "@/components/PropertyMap";
+import SelectedPropertyCard from "@/components/SelectedPropertyCard";
+import MapFilters from "@/components/MapFilters";
 
 const MapPage = () => {
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Explore Properties</h1>
+    <div className="flex h-full">
+      <div className="block">
+        <MapFilters />
       </div>
-      
-      <MapFilters />
-        <div className="relative">
+
+      {/* Main Content */}
+      <div className="w-full flex flex-col">
+        <div className="p-4 border-b border-gray-200">
+          <h1 className="text-xl font-semibold">Property Explorer</h1>
+        </div>
+        <div className=" relative h-full">
           <PropertyMap />
           <SelectedPropertyCard />
         </div>
+      </div>
     </div>
   );
 };
