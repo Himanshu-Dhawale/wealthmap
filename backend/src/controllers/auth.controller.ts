@@ -3,13 +3,18 @@ import { Jwt } from 'hono/utils/jwt';
 import { hashPassword } from '../utils/auth.utils';
 import { getPrismaClient } from '../utils/prisma';
 import { LoginSchema, RegisterSchema } from '../schema/auth.schema';
-import { uploadToCloudinary } from '../utils/cloudinary';
-
+import { uploadToCloudinaryUnsigned } from '../utils/cloudinary';
 export async function registerCompany(c: Context) {
 	try {
 		const validation = RegisterSchema.safeParse(await c.req.json());
 		if (!validation.success) {
-			return c.json({ message: 'Validation failed', errors: validation.error.flatten() }, 400);
+			return c.json(
+				{
+					message: 'Validation failed',
+					errors: validation.error.flatten(),
+				},
+				400,
+			);
 		}
 
 		const { name, email, password, logo, firstName, lastName, size, location } = validation.data;
@@ -20,14 +25,36 @@ export async function registerCompany(c: Context) {
 			return c.json({ message: 'Email already in use' }, 409);
 		}
 
-		let logoUrl: string | undefined;
+		const base64SizeInBytes = (base64: string): number => {
+			const len = base64.length;
+			const padding = base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0;
+			return (len * 3) / 4 - padding;
+		};
+
+		let logoUrl: string | null = null;
 		if (logo) {
-			const uploadResult = await uploadToCloudinary(logo);
-			logoUrl = uploadResult.secure_url;
+			const maxSizeInBytes = 512 * 1024;
+
+			if (base64SizeInBytes(logo) > maxSizeInBytes) {
+				return c.json({ message: 'Logo must be less than 512KB' }, 400);
+			}
+
+			try {
+				const uploadResult = await uploadToCloudinaryUnsigned(logo, c);
+				logoUrl = uploadResult.secure_url;
+			} catch (uploadError) {
+				console.error('Logo upload failed:', uploadError);
+				return c.json({ message: 'Failed to upload company logo' }, 500);
+			}
 		}
 
 		const company = await prisma.company.create({
-			data: { name, logoUrl, size, location },
+			data: {
+				name,
+				logoUrl,
+				size,
+				location,
+			},
 		});
 
 		const user = await prisma.user.create({
@@ -51,6 +78,13 @@ export async function registerCompany(c: Context) {
 					email: user.email,
 					role: user.role,
 					companyId: user.companyId,
+					firstName: user.firstName,
+					lastName: user.lastName,
+				},
+				company: {
+					id: company.id,
+					name: company.name,
+					logoUrl: company.logoUrl,
 				},
 			},
 			201,

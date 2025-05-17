@@ -2,19 +2,11 @@ import { z } from 'zod';
 
 const passwordSchema = z
 	.string()
-	.min(12, { message: 'Password must be at least 12 characters long' })
-	.refine((value) => /[A-Z]/.test(value), {
-		message: 'Password must contain at least one uppercase letter',
-	})
-	.refine((value) => /[a-z]/.test(value), {
-		message: 'Password must contain at least one lowercase letter',
-	})
-	.refine((value) => /[0-9]/.test(value), {
-		message: 'Password must contain at least one number',
-	})
-	.refine((value) => /[^A-Za-z0-9]/.test(value), {
-		message: 'Password must contain at least one special character',
-	});
+	.min(8, 'Password must be at least 8 characters')
+	.regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+	.regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+	.regex(/\d/, 'Password must contain at least one number')
+	.regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character');
 
 export const RegisterSchema = z.object({
 	name: z.string().min(2, 'Company name must be at least 2 characters'),
