@@ -1,18 +1,17 @@
 "use client";
 import { useMapStore } from "@/store/mapStore";
 import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
 import {
-  Search,
+  Building,
+  Home,
+  LandPlot,
   Map,
   Satellite,
-  Home,
-  Building,
-  LandPlot,
-  X,
   Filter,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 
 const MapFilters = () => {
@@ -23,18 +22,19 @@ const MapFilters = () => {
     setPriceRange,
     propertyType,
     setPropertyType,
-    toggleMapStyle,
-    mapStyle,
     filterProperties,
+    mapStyle,
+    toggleMapStyle,
   } = useMapStore();
 
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [priceRangeLocal, setPriceRangeLocal] = useState(priceRange);
 
   useEffect(() => {
     filterProperties();
   }, [searchQuery, priceRange, propertyType]);
 
+  // Debounce price range updates
   useEffect(() => {
     const timer = setTimeout(() => {
       if (
@@ -43,191 +43,148 @@ const MapFilters = () => {
       ) {
         setPriceRange(priceRangeLocal);
       }
-    }, 500);
+    }, 300);
     return () => clearTimeout(timer);
   }, [priceRangeLocal]);
 
   return (
     <>
-      {/* Mobile filter toggle button */}
+      {/* Floating Filter Button */}
       <Button
-        onClick={() => setIsMobileOpen(true)}
-        className=" block md:hidden fixed top-4 left-4 z-50 bg-yellow text-gray-800 shadow-lg hover:bg-gray-50"
-        size="sm"
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          "flex items-center gap-2 bg-white text-gray-800 hover:bg-gray-50 shadow-lg transition-all",
+          isOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        )}
       >
-        <Filter className="w-4 h-4 mr-2" />
+        <Filter className="w-4 h-4" />
         Filters
       </Button>
 
-      {/* Sidebar */}
-      <div
-        onClick={() => setIsMobileOpen(false)}
-        className={cn(
-          "fixed md:static inset-0 md:inset-auto z-40 md:z-auto transform transition-transform duration-300 ease-in-out",
-          isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        )}
-      >
-        <div className="w-72 h-screen  bg-white border-r border-gray-200 shadow-lg md:shadow-none flex flex-col">
-          {/* Header */}
-          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-semibold flex items-center">
-              <Filter className="w-4 h-4 mr-2 text-blue-600" />
-              Filters
-            </h2>
+      {/* Filters Panel */}
+      {isOpen && (
+        <div className="absolute top-0 left-0 bg-white rounded-lg shadow-xl border border-gray-200 w-72 z-50">
+          {/* Panel Header */}
+          <div className="flex justify-between items-center p-4 border-b border-gray-200">
+            <h3 className="font-medium text-gray-900">Map Filters</h3>
             <button
-              onClick={() => setIsMobileOpen(false)}
-              className="md:hidden text-gray-500 hover:text-gray-700"
+              onClick={() => setIsOpen(false)}
+              className="text-gray-500 hover:text-gray-700"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto scrollbar-hide p-4 space-y-6">
-            {/* Search */}
-            <div className="space-y-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  placeholder="Address, owner, etc..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 border p-2 w-full outline-none"
-                />
-              </div>
+          {/* Panel Content */}
+          <div className="p-4 space-y-5">
+            {/* Search Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Search
+              </label>
+              <input
+                className="w-full px-3 py-2 border border-gray-300 outline-none rounded-md focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Properties, addresses, owner..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
 
-            {/* Map Style */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+            {/* Map Style Toggle */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Map Style
               </label>
-              <Button
-                variant="outline"
-                onClick={toggleMapStyle}
-                className="w-full gap-2"
-              >
-                {mapStyle === "streets" ? (
-                  <>
-                    <Satellite className="w-4 h-4" />
-                    Satellite View
-                  </>
-                ) : (
-                  <>
-                    <Map className="w-4 h-4" />
-                    Street View
-                  </>
-                )}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant={mapStyle === "streets" ? "default" : "outline"}
+                  onClick={() => toggleMapStyle()}
+                  className="flex-1"
+                >
+                  <Map className="w-4 h-4 mr-2" />
+                  Map
+                </Button>
+                <Button
+                  variant={mapStyle === "satellite" ? "default" : "outline"}
+                  onClick={() => toggleMapStyle()}
+                  className="flex-1"
+                >
+                  <Satellite className="w-4 h-4 mr-2" />
+                  Satellite
+                </Button>
+              </div>
             </div>
 
             {/* Price Range */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <label className="text-sm font-medium text-gray-700">
-                  Price Range
-                </label>
-                <span className="text-sm text-gray-500">
-                  ₹{priceRangeLocal[0].toLocaleString("en-IN")} - ₹
-                  {priceRangeLocal[1].toLocaleString("en-IN")}
-                </span>
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Price: ₹{priceRangeLocal[0].toLocaleString("en-IN")} - ₹
+                {priceRangeLocal[1].toLocaleString("en-IN")}
+              </label>
               <Slider
                 min={0}
                 max={100000000}
                 step={1000000}
                 value={priceRangeLocal}
-                onValueChange={(value: any) =>
+                onValueChange={(value) =>
                   setPriceRangeLocal(value as [number, number])
                 }
               />
-              <div className="flex justify-between text-xs text-gray-500">
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <span>₹0</span>
                 <span>₹10Cr</span>
               </div>
             </div>
 
-            {/* Property Type */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+            {/* Property Type - Improved Design */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Property Type
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant={propertyType === "all" ? "default" : "outline"}
                   onClick={() => setPropertyType("all")}
-                  className="h-auto py-2 flex-col gap-2"
+                  size="sm"
+                  className="h-8"
                 >
-                  <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                    <Map className="w-4 h-4" />
-                  </div>
-                  <span>All</span>
+                  All
                 </Button>
                 <Button
                   variant={
                     propertyType === "residential" ? "default" : "outline"
                   }
                   onClick={() => setPropertyType("residential")}
-                  className="h-auto py-2 flex-col gap-2"
+                  size="sm"
+                  className="h-8"
                 >
-                  <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                    <Home className="w-4 h-4" />
-                  </div>
-                  <span>Residential</span>
+                  <Home className="w-3.5 h-3.5 mr-1" />
+                  Res
                 </Button>
                 <Button
                   variant={
                     propertyType === "commercial" ? "default" : "outline"
                   }
                   onClick={() => setPropertyType("commercial")}
-                  className="h-auto py-2 flex-col gap-2"
+                  size="sm"
+                  className="h-8"
                 >
-                  <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                    <Building className="w-4 h-4" />
-                  </div>
-                  <span>Commercial</span>
+                  <Building className="w-3.5 h-3.5 mr-1" />
+                  Com
                 </Button>
                 <Button
                   variant={propertyType === "land" ? "default" : "outline"}
                   onClick={() => setPropertyType("land")}
-                  className="h-auto py-2 flex-col gap-2"
+                  size="sm"
+                  className="h-8 "
                 >
-                  <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                    <LandPlot className="w-4 h-4" />
-                  </div>
-                  <span>Land</span>
+                  <LandPlot className="w-3.5 h-3.5 mr-1" />
+                  Land
                 </Button>
               </div>
             </div>
           </div>
-
-          {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
-            <Button
-              variant="ghost"
-              className="w-full text-blue-600 hover:text-blue-700"
-              onClick={() => {
-                setSearchQuery("");
-                setPriceRange([0, 100000000]);
-                setPriceRangeLocal([0, 100000000]);
-                setPropertyType("all");
-              }}
-            >
-              Clear All Filters
-            </Button>
-          </div>
         </div>
-      </div>
-
-      {/* Overlay for mobile */}
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
-          onClick={() => {
-            console.log("check", isMobileOpen);
-            setIsMobileOpen(false);
-          }}
-        />
       )}
     </>
   );

@@ -4,23 +4,14 @@ import MapFilters from "@/components/MapFilters";
 
 const MapPage = () => {
   return (
-    <div className="flex h-full">
-      <div className="block">
+    <div className="relative h-full w-full">
+      <div className="absolute top-4 left-4 z-50">
         <MapFilters />
       </div>
-
-      {/* Main Content */}
-      <div className="w-full flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-semibold">Property Explorer</h1>
-        </div>
-        <div className=" relative h-full">
-          <PropertyMap />
-          <SelectedPropertyCard />
-        </div>
-      </div>
+      {/* Main Map Content */}
+      <PropertyMap />
+      <SelectedPropertyCard />
     </div>
   );
 };
-
 export default MapPage;
