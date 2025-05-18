@@ -3,6 +3,9 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
 import { useMapStore } from "@/store/mapStore";
+import { propertiesData } from "@/data/proerties";
+import { Home, Building, TreeDeciduous } from "lucide-react";
+import ReactDOMServer from "react-dom/server";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 
@@ -13,75 +16,54 @@ const PropertyMap = () => {
     useMapStore();
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  // Initialize map
   useEffect(() => {
-    if (!mapContainer.current || mapRef.current) return;
+    if (!mapContainer.current) return;
 
-    mapRef.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: `mapbox://styles/mapbox/${
-        mapStyle === "satellite" ? "satellite-v9" : "streets-v12"
-      }`,
-      center: [77.5946, 12.9716], // Default to Bangalore
-      zoom: 11,
-      maxZoom: 18,
-      minZoom: 10,
-    });
+    // Check if the map container is empty, or the map was removed due to unmount
+    const mapContainerExists =
+      mapContainer.current.querySelector(".mapboxgl-canvas");
+    if (!mapRef.current || !mapContainerExists) {
+      // If map already exists in memory but not in DOM, recreate it
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
 
-    mapRef.current.addControl(new mapboxgl.NavigationControl());
-    mapRef.current.addControl(new mapboxgl.FullscreenControl());
-    mapRef.current.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true,
-      })
-    );
+      mapRef.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: `mapbox://styles/mapbox/${
+          mapStyle === "satellite" ? "satellite-v9" : "streets-v12"
+        }`,
+        center: [-74.006, 40.7128],
+        zoom: 11,
+        maxZoom: 18,
+        minZoom: 10,
+      });
 
-    mapRef.current.on("load", () => {
-      setIsMapLoaded(true);
-      setProperties([
-        {
-          id: "1",
-          title: "Luxury Apartment",
-          address: "123 MG Road, Bangalore",
-          lat: 12.9716,
-          lng: 77.5946,
-          price: 12000000,
-          area: 1800,
-          type: "residential",
-          owner: "Rajesh Kumar",
-          netWorth: 50000000,
-          lastSoldPrice: 9000000,
-          yearBuilt: 2018,
-          image:
-            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-        },
-        {
-          id: "2",
-          title: "Commercial Space",
-          address: "456 Brigade Road, Bangalore",
-          lat: 12.975,
-          lng: 77.6,
-          price: 35000000,
-          area: 3500,
-          type: "commercial",
-          owner: "Infinity Developers",
-          netWorth: 2000000000,
-          yearBuilt: 2020,
-          image:
-            "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-        },
-      ]);
-    });
-
+      mapRef.current.addControl(new mapboxgl.NavigationControl());
+      mapRef.current.addControl(new mapboxgl.FullscreenControl());
+      mapRef.current.addControl(
+        new mapboxgl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          trackUserLocation: true,
+        })
+      );
+      mapRef.current.on("load", () => {
+        setIsMapLoaded(true);
+        setProperties(propertiesData);
+      });
+    }
     return () => {
-      mapRef.current?.remove();
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+        setIsMapLoaded(false);
+      }
     };
-  }, []);
+  }, [mapContainer.current]);
 
-  // Update map style when changed
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
     mapRef.current.setStyle(
@@ -94,30 +76,27 @@ const PropertyMap = () => {
   // Add/update markers when filtered properties change
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
-
     // Remove existing markers
     document.querySelectorAll(".mapboxgl-marker").forEach((el) => el.remove());
-
     // Create a bounds object to fit the map to markers
     const bounds = new mapboxgl.LngLatBounds();
-
     filteredProperties.forEach((property) => {
-      const el = document.createElement("div");
-      el.className = `property-marker w-6 h-6 rounded-full border-2 border-white shadow-md cursor-pointer flex items-center justify-center text-white text-xs font-bold`;
+      const markerElement = document.createElement("div");
+      markerElement.className = `property-marker w-6 h-6 rounded-full text-white text-xs bg-red-500 cursor-pointer flex items-center justify-center`;
 
-      // Different colors for different property types
+      let iconElement;
       if (property.type === "residential") {
-        el.classList.add("bg-blue-500");
-        el.textContent = "🏠";
+        iconElement = <Home size={14} />;
       } else if (property.type === "commercial") {
-        el.classList.add("bg-purple-500");
-        el.textContent = "🏢";
+        iconElement = <Building size={14} />;
       } else {
-        el.classList.add("bg-green-500");
-        el.textContent = "🌳";
+        iconElement = <TreeDeciduous size={14} />;
       }
+      // Render the React element to a string
+      const iconString = ReactDOMServer.renderToString(iconElement);
+      markerElement.innerHTML = iconString;
 
-      el.addEventListener("click", () => {
+      markerElement.addEventListener("click", () => {
         setSelectedProperty(property);
         mapRef.current?.flyTo({
           center: [property.lng, property.lat],
@@ -125,12 +104,12 @@ const PropertyMap = () => {
           essential: true,
         });
       });
+
       if (mapRef.current) {
-        new mapboxgl.Marker(el)
+        new mapboxgl.Marker({ element: markerElement })
           .setLngLat([property.lng, property.lat])
           .addTo(mapRef.current);
       }
-
       // Extend the bounds to include this marker
       bounds.extend([property.lng, property.lat]);
     });
@@ -142,7 +121,7 @@ const PropertyMap = () => {
         maxZoom: 14,
       });
     }
-  }, [filteredProperties, isMapLoaded]);
+  }, [filteredProperties, isMapLoaded, setSelectedProperty, mapRef]);
 
   return (
     <div
