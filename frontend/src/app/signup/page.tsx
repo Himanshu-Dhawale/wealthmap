@@ -53,7 +53,7 @@ const SignupForm = () => {
         };
         try {
           await loggingInUser(userPayload);
-          router.push("/");
+          router.push("/map");
         } catch (err) {
           console.error(err, "Something went wrong, please login...");
         }
