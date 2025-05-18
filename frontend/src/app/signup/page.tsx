@@ -52,8 +52,9 @@ const SignupForm = () => {
           redirect: false,
         };
         try {
-          await loggingInUser(userPayload);
-          router.push("/map");
+          const response = await loggingInUser(userPayload);
+          if (response?.status !== 401) return router.push("/map");
+          console.log(response?.error);
         } catch (err) {
           console.error(err, "Something went wrong, please login...");
         }
