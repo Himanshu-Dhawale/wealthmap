@@ -16,7 +16,7 @@ export const fileToBase64 = (file: File): Promise<string> => {
       resolve(base64String);
     };
 
-    reader.onerror = (error) => {
+    reader.onerror = () => {
       reject(new Error("Failed to convert file to Base64."));
     };
 

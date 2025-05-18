@@ -1,6 +1,7 @@
 import { SignupFormData } from "@/types/types";
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -36,7 +37,7 @@ const CompanyRegisterForm = ({
       <div>
         <label
           htmlFor="companyName"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block mb-1 text-sm font-medium text-gray-700"
         >
           Company Name
         </label>
@@ -59,7 +60,7 @@ const CompanyRegisterForm = ({
       <div>
         <label
           htmlFor="industry"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block mb-1 text-sm font-medium text-gray-700"
         >
           Industry
         </label>
@@ -85,7 +86,7 @@ const CompanyRegisterForm = ({
       <div>
         <label
           htmlFor="companySize"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block mb-1 text-sm font-medium text-gray-700"
         >
           Company Size
         </label>
@@ -113,7 +114,7 @@ const CompanyRegisterForm = ({
       <div>
         <label
           htmlFor="location"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block mb-1 text-sm font-medium text-gray-700"
         >
           Location
         </label>
@@ -134,22 +135,24 @@ const CompanyRegisterForm = ({
       <div>
         <label
           htmlFor="logo"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block mb-1 text-sm font-medium text-gray-700"
         >
           Company Logo
         </label>
         <div className="flex items-center space-x-4">
           <div className="relative">
             {logoPreview ? (
-              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-300">
-                <img
+              <div className="relative w-16 h-16 overflow-hidden border-2 border-gray-300 rounded-full">
+                <Image
                   src={logoPreview}
                   alt="Company logo preview"
-                  className="w-full h-full object-cover"
+                  className="absolute object-cover w-full h-full"
+                  fill
+                  objectFit="contain"
                 />
               </div>
             ) : (
-              <div className="w-16 h-16 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center">
+              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 border-2 border-gray-300 border-dashed rounded-full">
                 <svg
                   className="w-6 h-6 text-gray-400"
                   fill="none"
@@ -225,9 +228,9 @@ const CompanyRegisterForm = ({
           onClick={() => setStep(1)}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-all"
+          className="px-6 py-3 font-medium text-gray-700 transition-all border border-gray-300 rounded-lg hover:bg-gray-50"
         >
-          <span className="inline-flex align-middle gap-2">
+          <span className="inline-flex gap-2 align-middle">
             <ChevronLeft size={18} />{" "}
           </span>
           Back
@@ -236,7 +239,7 @@ const CompanyRegisterForm = ({
           type="submit"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+          className="px-6 py-3 font-medium text-white transition-all rounded-lg shadow-md bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg"
         >
           Complete Registration
         </motion.button>

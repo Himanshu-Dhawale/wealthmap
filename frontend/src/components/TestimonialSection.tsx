@@ -1,5 +1,6 @@
 import { Testimonial } from "@/types/types";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const testimonials: Testimonial[] = [
   {
@@ -31,27 +32,27 @@ const testimonials: Testimonial[] = [
 const TestimonialSection = () => {
   return (
     <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
             What Our{" "}
-            <span className="bg-primary-gradient bg-clip-text text-transparent">
+            <span className="text-transparent bg-primary-gradient bg-clip-text">
               Clients
             </span>{" "}
             Say
           </h2>
-          <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="max-w-3xl mx-auto mt-4 text-lg text-gray-600">
             Trusted by real estate professionals and investors nationwide
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.name}
@@ -59,14 +60,15 @@ const TestimonialSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-gray-50 p-8 rounded-xl hover:shadow-lg transition-all"
+              className="p-8 transition-all bg-gray-50 rounded-xl hover:shadow-lg"
             >
               <div className="flex items-center mb-6">
-                <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
-                  <img
+                <div className="relative w-12 h-12 mr-4 overflow-hidden rounded-full">
+                  <Image
                     src={testimonial.avatar}
                     alt={testimonial.name}
-                    className="w-full h-full object-cover"
+                    className="object-cover w-full h-full"
+                    fill
                   />
                 </div>
                 <div>
@@ -77,7 +79,7 @@ const TestimonialSection = () => {
                 </div>
               </div>
 
-              <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
+              <p className="mb-6 italic text-gray-700">"{testimonial.quote}"</p>
 
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
@@ -105,23 +107,23 @@ const TestimonialSection = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-16 pt-12 border-t border-gray-200"
+          className="pt-12 mt-16 border-t border-gray-200"
         >
-          <p className="text-center text-gray-500 text-sm mb-8">
+          <p className="mb-8 text-sm text-center text-gray-500">
             TRUSTED BY INDUSTRY LEADERS
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
+          <div className="grid items-center grid-cols-2 gap-8 md:grid-cols-5">
             {[
               "RealtyTrust",
               "UrbanDevelopers",
               "PrimeProperties",
               "EliteHomes",
               "MetroBrokers",
-            ].map((company, index) => (
+            ].map((company) => (
               <motion.div
                 key={company}
                 whileHover={{ scale: 1.05 }}
-                className="text-gray-400 font-bold text-center text-xl"
+                className="text-xl font-bold text-center text-gray-400"
               >
                 {company}
               </motion.div>

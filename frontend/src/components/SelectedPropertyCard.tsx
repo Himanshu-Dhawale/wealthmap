@@ -10,6 +10,7 @@ import {
   IndianRupee,
 } from "lucide-react";
 import { PropertyType } from "@/types/types";
+import Image from "next/image";
 
 const getPropertyTypeIcon = (type: PropertyType) => {
   switch (type) {
@@ -30,29 +31,32 @@ const SelectedPropertyCard = () => {
   if (!selectedProperty) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 md:right-8 w-full max-w-sm z-50 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+    <div className="fixed z-50 w-full max-w-sm overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl bottom-4 right-4 md:right-8">
       <div className="relative">
         {selectedProperty.image ? (
-          <img
+          <div className="relative w-full h-48">
+          <Image
             src={selectedProperty.image}
             alt={selectedProperty.title}
-            className="w-full h-48 object-cover"
+            className="absolute object-cover"
+            fill
           />
+          </div>
         ) : (
-          <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
+          <div className="flex items-center justify-center w-full h-48 bg-gray-100">
             <Home className="w-12 h-12 text-gray-400" />
           </div>
         )}
         <button
           onClick={() => setSelectedProperty(null)}
-          className="absolute top-2 right-2 bg-white/80 rounded-full p-2 hover:bg-white transition-colors"
+          className="absolute p-2 transition-colors rounded-full top-2 right-2 bg-white/80 hover:bg-white"
         >
           <MoveRight className="w-4 h-4" />
         </button>
       </div>
 
       <div className="p-4">
-        <div className="flex justify-between items-start">
+        <div className="flex items-start justify-between">
           <h2 className="text-xl font-bold">{selectedProperty.title}</h2>
           <Badge variant="outline" className="flex items-center gap-1">
             {getPropertyTypeIcon(selectedProperty.type)}
@@ -60,15 +64,15 @@ const SelectedPropertyCard = () => {
           </Badge>
         </div>
 
-        <div className="flex items-center text-sm text-gray-600 mt-1">
+        <div className="flex items-center mt-1 text-sm text-gray-600">
           <MapPin className="w-4 h-4 mr-1" />
           <span>{selectedProperty.address}</span>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 mt-4">
           <div>
             <p className="text-sm text-gray-500">Price</p>
-            <p className="text-lg font-semibold flex items-center">
+            <p className="flex items-center text-lg font-semibold">
               <IndianRupee className="w-4 h-4 mr-1" />
               {selectedProperty.price.toLocaleString("en-IN")}
             </p>
@@ -84,7 +88,7 @@ const SelectedPropertyCard = () => {
           )}
         </div>
 
-        <div className="mt-4 pt-4 border-t border-gray-200">
+        <div className="pt-4 mt-4 border-t border-gray-200">
           <p className="text-sm text-gray-500">Owner</p>
           <p className="font-medium">{selectedProperty.owner}</p>
           {selectedProperty.netWorth && (
@@ -94,7 +98,7 @@ const SelectedPropertyCard = () => {
           )}
         </div>
 
-        <button className="w-full mt-4 px-2 py-1 bg-blue-600 hover:bg-blue-700">
+        <button className="w-full px-2 py-1 mt-4 bg-blue-600 hover:bg-blue-700">
           View Full Details
         </button>
       </div>
