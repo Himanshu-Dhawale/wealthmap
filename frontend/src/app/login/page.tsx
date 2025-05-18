@@ -19,7 +19,7 @@ const LoginPage = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loggingInUser({ ...data, redirect: false });
-      router.push("/");
+      router.push("/map");
     } catch (err) {
       console.error(err);
     }

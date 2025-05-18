@@ -14,10 +14,10 @@ const geistMono = Geist_Mono({
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-        <DashboardShell>{children}</DashboardShell>
-      </body>
-    </html>
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+    >
+      <DashboardShell>{children}</DashboardShell>
+    </body>
   );
 }
