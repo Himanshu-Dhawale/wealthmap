@@ -26,7 +26,7 @@ export interface ISteps {
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 
-export type PropertyType = 'residential' | 'commercial' | 'land' | 'all';
+export type PropertyType = "residential" | "commercial" | "land" | "all";
 
 export type Property = {
   id: string;
@@ -51,7 +51,7 @@ export type MapState = {
   properties: Property[];
   setProperties: (props: Property[]) => void;
   filteredProperties: Property[];
-  mapStyle: 'streets' | 'satellite';
+  mapStyle: "streets" | "satellite";
   toggleMapStyle: () => void;
   priceRange: [number, number];
   setPriceRange: (range: [number, number]) => void;
@@ -61,4 +61,22 @@ export type MapState = {
   setSearchQuery: (query: string) => void;
   filterProperties: () => void;
   isLoading: boolean;
+};
+
+// member types
+export type Member = {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "member";
+  status: "active" | "pending" | "inactive";
+  joinedAt: Date;
+};
+
+export type MembersState = {
+  members: Member[];
+  addMember: (member: Omit<Member, "id" | "joinedAt" | "status">) => void;
+  updateMember: (id: string, updates: Partial<Member>) => void;
+  removeMember: (id: string) => void;
+  inviteMember: (email: string, role: "admin" | "member") => Promise<void>;
 };
