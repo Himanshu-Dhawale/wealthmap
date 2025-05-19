@@ -1,5 +1,5 @@
 "use client";
-import { useMapStore } from "@/store/mapStore";
+import { useMapStore } from "@/stores/mapStore";
 import { Slider } from "@/components/ui/slider";
 import {
   Building,
