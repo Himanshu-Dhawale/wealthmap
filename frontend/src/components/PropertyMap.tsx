@@ -2,7 +2,7 @@
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
-import { useMapStore } from "@/store/mapStore";
+import { useMapStore } from "@/stores/mapStore";
 import { propertiesData } from "@/data/proerties";
 import { Home, Building, TreeDeciduous } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
