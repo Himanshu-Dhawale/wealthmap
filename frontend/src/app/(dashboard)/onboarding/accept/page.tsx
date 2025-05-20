@@ -2,23 +2,29 @@
 import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { OnboardingFormData } from "@/types/types";
 import { onboardingSchema } from "@/schema/onboardingSchema";
-// import { createNewUser } from "../../lib/utils";
+import { postReq } from "../../../../lib/axios-helpers/apiClient";
+import { EMPLOYEE_SIGNUP } from "../../../../endpoints/employee.endpoint";
 
-const acceptPage = () => {
+const AcceptPage = () => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<OnboardingFormData>({ resolver: zodResolver(onboardingSchema) });
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const invitationId = searchParams.get("token");
 
   const onSubmit = async (data: OnboardingFormData) => {
+    const payload = { ...data, invitationId };
     try {
-      await createNewUser(data);
-      router.push("/map");
+      const response = await postReq(EMPLOYEE_SIGNUP, payload);
+      if (response.status === 201) {
+        router.push("/map");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -180,4 +186,4 @@ const acceptPage = () => {
   );
 };
 
-export default acceptPage;
+export default AcceptPage;
