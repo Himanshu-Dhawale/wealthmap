@@ -2,6 +2,7 @@ import { postReq } from "@/lib/axios-helpers/apiClient";
 import { MembersState } from "@/types/types";
 import { create } from "zustand";
 import { toast } from "sonner";
+import { getSession } from "next-auth/react";
 
 export const useMembersStore = create<MembersState>()((set) => ({
   members: [
@@ -46,9 +47,10 @@ export const useMembersStore = create<MembersState>()((set) => ({
     })),
 
   inviteMember: async (email, role) => {
+    const session = await getSession()
+    const token = session?.user.accessToken
     try {
-      const res = await postReq("/company-onboarding/invite", { email });
-      console.log(res);
+      const res = await postReq("/company-onboarding/invite", { email }, token);
       if (res.status === 201) {
         set((state) => ({
           members: [
