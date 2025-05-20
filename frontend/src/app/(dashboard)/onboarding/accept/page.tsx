@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -8,7 +9,7 @@ import { onboardingSchema } from "@/schema/onboardingSchema";
 import { postReq } from "../../../../lib/axios-helpers/apiClient";
 import { EMPLOYEE_SIGNUP } from "../../../../endpoints/employee.endpoint";
 
-const AcceptPage = () => {
+const AcceptPageContent = () => {
   const {
     register,
     handleSubmit,
@@ -186,4 +187,23 @@ const AcceptPage = () => {
   );
 };
 
-export default AcceptPage;
+export default function AcceptPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100">
+          <div className="w-full max-w-md p-8 text-center">
+            <div className="p-8 overflow-hidden bg-white shadow-xl rounded-2xl">
+              <div className="flex justify-center">
+                <div className="w-8 h-8 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+              </div>
+              <p className="mt-4 text-gray-700">Loading onboarding form...</p>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <AcceptPageContent />
+    </Suspense>
+  );
+}
