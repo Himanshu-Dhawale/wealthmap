@@ -82,16 +82,12 @@ export const NEXT_AUTH: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = {
-        ...session.user,
-        id: token.id,
-        email: token.email,
-        role: token.role,
-        companyId: token.companyId,
-        accessToken: token.accessToken
-      };
+      session.user.id = token.id;
+      session.user.role = token.role;
+      session.user.companyId = token.companyId;
+      session.user.accessToken = token.accessToken || token.id;
       return session;
-    },
+    }
   },
   pages: {
     signIn: '/login',
