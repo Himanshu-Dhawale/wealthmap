@@ -2,7 +2,7 @@ import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { isAxiosError } from "axios";
 import { postReq } from "./axios-helpers/apiClient";
-import { SIGNIN } from "../endpoints/auth";
+import { SIGNIN } from "../endpoints/auth.endpoint";
 
 export const NEXT_AUTH: AuthOptions = {
   providers: [
