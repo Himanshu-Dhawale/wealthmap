@@ -4,6 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./globals.css";
 import { Providers } from "./provider";
 import { MobileNav } from "@/components/MobileNav";
+import { Toaster } from "@/components/ui/sonner"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         <Providers>{children}</Providers>
         <MobileNav/>
+        <Toaster richColors closeButton theme="light" />
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
 "use client";
-import { useMapStore } from "@/store/mapStore";
+import { useMapStore } from "@/stores/mapStore";
 import { Badge } from "@/components/ui/badge";
 import {
   MapPin,
