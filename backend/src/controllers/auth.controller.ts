@@ -68,7 +68,10 @@ export async function registerCompany(c: Context) {
 			},
 		});
 
-		const token = await Jwt.sign({ userId: user.id, role: user.role }, c.env.JWT_SECRET);
+		const token = await Jwt.sign(
+			{ userId: user.id, role: user.role, companyId: user.companyId },
+			c.env.JWT_SECRET,
+		);
 
 		return c.json(
 			{
@@ -125,7 +128,10 @@ export async function login(c: Context) {
 			return c.json({ message: 'Invalid credentials' }, 401);
 		}
 
-		const token = await Jwt.sign({ userId: user.id, role: user.role }, c.env.JWT_SECRET);
+		const token = await Jwt.sign(
+			{ userId: user.id, role: user.role, companyId: user.companyId },
+			c.env.JWT_SECRET,
+		);
 
 		return c.json({
 			token,
