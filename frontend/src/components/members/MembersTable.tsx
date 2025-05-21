@@ -25,34 +25,25 @@ import {
   Key,
   Database,
   Trash2,
+  Pen,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ViewActivityDialog } from "./ViewActivity";
 import { Member } from "@/types/types";
 
-interface MembersTableProps {
-  members: Member[];
-  onRefresh: () => void;
-}
-
-export function MembersTable({ members, onRefresh }: MembersTableProps) {
-  const [editingMember, setEditingMember] = useState<Member | null>(null);
-  const [managingPermissionsFor, setManagingPermissionsFor] =
-    useState<Member | null>(null);
+export function MembersTable({ members }: { members: Member[] }) {
   const [viewingActivityFor, setViewingActivityFor] = useState<Member | null>(
     null
   );
-  const [settingDataAccessFor, setSettingDataAccessFor] =
-    useState<Member | null>(null);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "ACTIVE":
+      case "active":
         return <Check className="h-4 w-4 text-green-500" />;
-      case "PENDING":
+      case "pending":
         return <Clock className="h-4 w-4 text-yellow-500" />;
-      case "INACTIVE":
+      case "inactive":
         return <X className="h-4 w-4 text-red-500" />;
       default:
         return null;
@@ -93,9 +84,9 @@ export function MembersTable({ members, onRefresh }: MembersTableProps) {
               <TableCell>
                 <Badge
                   className="text-start "
-                  variant={member.role === "admin" ? "default" : "secondary"}
+                  variant={member.role === "admin" ? "default" : "outline"}
                 >
-                  <Shield className="h-3 w-3 -ml-2" />
+                  <Shield className="h-3 w-3 mr-1" />
                   {member.role.toLowerCase()}
                 </Badge>
               </TableCell>
@@ -123,12 +114,11 @@ export function MembersTable({ members, onRefresh }: MembersTableProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setEditingMember(member)}>
+                    <DropdownMenuItem>
+                      <Pen size={14} className="h-4 w-4 mr-2" />
                       Edit Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setManagingPermissionsFor(member)}
-                    >
+                    <DropdownMenuItem>
                       <Key className="h-4 w-4 mr-2" />
                       Manage Permissions
                     </DropdownMenuItem>
@@ -138,9 +128,7 @@ export function MembersTable({ members, onRefresh }: MembersTableProps) {
                       <Activity className="h-4 w-4 mr-2" />
                       View Activity
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setSettingDataAccessFor(member)}
-                    >
+                    <DropdownMenuItem>
                       <Database className="h-4 w-4 mr-2" />
                       Set Data Access
                     </DropdownMenuItem>
