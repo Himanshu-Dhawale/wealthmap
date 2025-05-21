@@ -33,27 +33,59 @@ export async function getCompanyProfile(c: Context) {
 }
 
 export async function getCompanyTeam(c: Context) {
-	try {
-		const { companyId } = c.get('jwtPayload');
-		const prisma = getPrismaClient(c.env.DATABASE_URL);
+	const { companyId } = c.get('jwtPayload');
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
 
-		const users = await prisma.user.findMany({
-			where: { companyId },
-			select: {
-				id: true,
-				firstName: true,
-				lastName: true,
-				email: true,
-				role: true,
-				isActive: true,
-			},
-		});
+	const users = await prisma.user.findMany({
+		where: { companyId },
+		select: {
+			id: true,
+			firstName: true,
+			lastName: true,
+			email: true,
+			role: true,
+			isActive: true,
+			createdAt: true,
+		},
+	});
 
-		return c.json({ users }, 200);
-	} catch (error) {
-		console.error('Error fetching company team:', error);
-		return c.json({ message: 'Internal server error' }, 500);
-	}
+	const invitations = await prisma.invitation.findMany({
+		where: { companyId },
+		select: {
+			email: true,
+			status: true,
+			createdAt: true,
+			acceptedAt: true,
+		},
+	});
+
+	const userEmails = new Set(users.map((u) => u.email.toLowerCase()));
+
+	const unmatchedInvites = invitations
+		.filter((inv) => !userEmails.has(inv.email.toLowerCase()))
+		.map((invite) => ({
+			id: null,
+			email: invite.email,
+			name: '',
+			role: 'EMPLOYEE',
+			status: invite.status,
+			joinedAt: invite.acceptedAt ?? invite.createdAt,
+			isActive: false,
+		}));
+
+	const acceptedUsers = users.map((user) => ({
+		id: user.id,
+		email: user.email,
+		name: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
+		role: user.role,
+		status: 'ACCEPTED',
+		joinedAt: user.createdAt,
+		isActive: user.isActive,
+	}));
+
+	const team = [...acceptedUsers, ...unmatchedInvites];
+
+	return c.json({ members: team }, 200);
 }
 
 export async function updateCompanyProfile(c: Context) {
