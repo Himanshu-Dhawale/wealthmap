@@ -80,8 +80,10 @@ export type Member = {
 
 export type MembersState = {
   members: Member[];
+  fetchMembers: () => Promise<void>;
   addMember: (member: Omit<Member, "id" | "joinedAt" | "status">) => void;
   updateMember: (id: string, updates: Partial<Member>) => void;
   removeMember: (id: string) => void;
   inviteMember: (email: string, role: "admin" | "member") => Promise<void>;
+  acceptInvitaion: (invitationId: string | null, name: string) => void;
 };
