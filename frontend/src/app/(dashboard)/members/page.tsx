@@ -6,7 +6,6 @@ import { EditMemberDialog } from "@/components/members/EditMember";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Member } from "@/types/types";
 
 export default function ManageMembersPage() {
@@ -20,12 +19,6 @@ export default function ManageMembersPage() {
     (member) =>
       member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       member.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const activeMembers = filteredMembers.filter((m) => m.status === "active");
-  const pendingMembers = filteredMembers.filter((m) => m.status === "pending");
-  const inactiveMembers = filteredMembers.filter(
-    (m) => m.status === "inactive"
   );
 
   return (
@@ -53,102 +46,19 @@ export default function ManageMembersPage() {
           />
         </div>
 
-        <Tabs defaultValue="all" className="w-full ">
-          <TabsList>
-            <TabsTrigger value="all">All Members</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="pending">Pending</TabsTrigger>
-            <TabsTrigger value="inactive">Inactive</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="all" className="pt-6">
-            {filteredMembers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-muted-foreground">No members found</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredMembers.map((member) => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    onEdit={(member) => {
-                      setEditingMember(member);
-                      setIsEditDialogOpen(true);
-                    }}
-                    onRemove={removeMember}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="active" className="pt-6">
-            {activeMembers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-muted-foreground">No active members</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {activeMembers.map((member) => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    onEdit={(member) => {
-                      setEditingMember(member);
-                      setIsEditDialogOpen(true);
-                    }}
-                    onRemove={removeMember}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="pending" className="pt-6">
-            {pendingMembers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-muted-foreground">No pending members</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {pendingMembers.map((member) => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    onEdit={(member) => {
-                      setEditingMember(member);
-                      setIsEditDialogOpen(true);
-                    }}
-                    onRemove={removeMember}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="inactive" className="pt-6">
-            {inactiveMembers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-muted-foreground">No inactive members</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {inactiveMembers.map((member) => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    onEdit={(member) => {
-                      setEditingMember(member);
-                      setIsEditDialogOpen(true);
-                    }}
-                    onRemove={removeMember}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredMembers.map((member) => (
+            <MemberCard
+              key={member.id}
+              member={member}
+              onEdit={(member) => {
+                setEditingMember(member);
+                setIsEditDialogOpen(true);
+              }}
+              onRemove={removeMember}
+            />
+          ))}
+        </div>
       </div>
 
       {editingMember && (

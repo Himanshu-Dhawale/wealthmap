@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -42,12 +41,6 @@ export function MemberCard({ member, onEdit, onRemove }: MemberCardProps) {
     <div className="bg-card rounded-lg border p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
         <div className="flex items-center space-x-3">
-          <Avatar>
-            <AvatarImage src={`https://i.pravatar.cc/150?u=${member.email}`} />
-            <AvatarFallback>
-              {member.name.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
           <div>
             <h3 className="font-medium">{member.name || "Invited User"}</h3>
             <div className="flex items-center text-sm text-muted-foreground mt-1">
