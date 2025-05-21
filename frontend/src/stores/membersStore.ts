@@ -1,28 +1,22 @@
-import { postReq } from "@/lib/axios-helpers/apiClient";
+import { getReq, postReq } from "@/lib/axios-helpers/apiClient";
 import { MembersState } from "@/types/types";
 import { create } from "zustand";
 import { toast } from "sonner";
 import { getSession } from "next-auth/react";
+import { EMPLOYEES, EMPLOYEE_INVITE } from "@/endpoints/employee.endpoint";
 
 export const useMembersStore = create<MembersState>()((set) => ({
-  members: [
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john@wealthmap.com",
-      role: "admin",
-      status: "active",
-      joinedAt: new Date("2023-01-15"),
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane@wealthmap.com",
-      role: "member",
-      status: "active",
-      joinedAt: new Date("2023-02-20"),
-    },
-  ],
+  members: [],
+  fetchMembers: async () => {
+    try {
+      const session = await getSession();
+      const token = session?.user.accessToken;
+      const res: any = await getReq(EMPLOYEES, {}, token);
+      set((state) => ({ ...state, members: res?.data.members }));
+    } catch (error) {
+      console.log(error);
+    }
+  },
   addMember: (member) =>
     set((state) => ({
       members: [
@@ -47,11 +41,11 @@ export const useMembersStore = create<MembersState>()((set) => ({
     })),
 
   inviteMember: async (email, role) => {
-    const session = await getSession()
-    const token = session?.user.accessToken
+    const session = await getSession();
+    const token = session?.user.accessToken;
     try {
-      const res = await postReq("/company-onboarding/invite", { email }, token);
-      if (res.status === 201) {
+      const res = await postReq(EMPLOYEE_INVITE, { email }, token);
+      if (res.status === 200 || res.status === 201) {
         set((state) => ({
           members: [
             ...state.members,
@@ -73,5 +67,12 @@ export const useMembersStore = create<MembersState>()((set) => ({
       console.error("API error inviting member:", error);
       throw error;
     }
+  },
+  acceptInvitaion: (email, name) => {
+    set((state) => ({
+      members: state.members.map((member) =>
+        member.email === email ? { ...member, name, status: "active" } : member
+      ),
+    }));
   },
 }));
