@@ -4,12 +4,20 @@ import { MembersTable } from "@/components/members/MembersTable";
 import { InviteMemberDialog } from "@/components/members/InviteMemberDialog";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
 export default function ManageMembersPage() {
-  const { members } = useMembersStore();
+  const { members, fetchMembers } = useMembersStore();
   const [searchTerm, setSearchTerm] = useState("");
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user.accessToken) {
+      fetchMembers();
+    }
+  }, [fetchMembers, session?.user.accessToken]);
 
   const filteredMembers = members.filter(
     (member) =>
@@ -44,10 +52,7 @@ export default function ManageMembersPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <MembersTable
-          members={filteredMembers}
-          onRefresh={() => console.log("refreshed")}
-        />
+        <MembersTable members={filteredMembers} />
       </div>
     </div>
   );
