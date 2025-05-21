@@ -12,15 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
 
 export function InviteMemberDialog() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<"admin" | "member">("member");
   const [isLoading, setIsLoading] = useState(false);
-  const { data: session } = useSession();
-  console.log("session", session);
   const inviteMember = useMembersStore((state) => state.inviteMember);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,9 +26,6 @@ export function InviteMemberDialog() {
 
     try {
       inviteMember(email, role);
-      // toast.success('Invitation sent',{
-      //   description: `An invitation has been sent to ${email}`,
-      // });
       setEmail("");
       setRole("member");
       setOpen(false);

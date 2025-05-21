@@ -71,6 +71,9 @@ export type Member = {
   role: "admin" | "member";
   status: "active" | "pending" | "inactive";
   joinedAt: Date;
+  lastActive?: string;
+  permissions?: string[];
+  dataAccess?: string[];
 };
 
 export type MembersState = {
