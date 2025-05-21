@@ -21,12 +21,6 @@ export default function ManageMembersPage() {
       member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const activeMembers = filteredMembers.filter((m) => m.status === "active");
-  const pendingMembers = filteredMembers.filter((m) => m.status === "pending");
-  const inactiveMembers = filteredMembers.filter(
-    (m) => m.status === "inactive"
-  );
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col space-y-8">
