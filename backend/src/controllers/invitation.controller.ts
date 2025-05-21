@@ -84,5 +84,5 @@ export async function acceptInvitation(c: Context) {
 		}),
 	]);
 
-	return c.json({ message: 'Account created successfully' }, 201);
+	return c.json({ message: 'Account created successfully', email: invitation.email }, 201);
 }
