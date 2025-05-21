@@ -1,23 +1,27 @@
 "use client";
 import { useMembersStore } from "@/stores/membersStore";
-import { MemberCard } from "@/components/members/MemberCard";
+import { MembersTable } from "@/components/members/MembersTable";
 import { InviteMemberDialog } from "@/components/members/InviteMemberDialog";
-import { EditMemberDialog } from "@/components/members/EditMember";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { Member } from "@/types/types";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
 export default function ManageMembersPage() {
-  const members = useMembersStore((state) => state.members);
-  const removeMember = useMembersStore((state) => state.removeMember);
+  const { members, fetchMembers } = useMembersStore();
   const [searchTerm, setSearchTerm] = useState("");
-  const [editingMember, setEditingMember] = useState<Member | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user.accessToken) {
+      fetchMembers();
+    }
+  }, [fetchMembers, session?.user.accessToken]);
 
   const filteredMembers = members.filter(
     (member) =>
-      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${member.name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
       member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -26,12 +30,15 @@ export default function ManageMembersPage() {
       <div className="flex flex-col space-y-8">
         <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Team Members</h1>
+            <h1 className="text-2xl font-bold tracking-tight">
+              Team Management
+            </h1>
             <p className="text-muted-foreground">
-              Manage your WealthMap team members and their permissions
+              Manage your team members, permissions, and data access
             </p>
           </div>
           <div className="flex space-x-2">
+            <Button variant="outline">Company Preferences</Button>
             <InviteMemberDialog />
           </div>
         </div>
@@ -45,29 +52,8 @@ export default function ManageMembersPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredMembers.map((member) => (
-            <MemberCard
-              key={member.id}
-              member={member}
-              onEdit={(member) => {
-                setEditingMember(member);
-                setIsEditDialogOpen(true);
-              }}
-              onRemove={removeMember}
-            />
-          ))}
-        </div>
+        <MembersTable members={filteredMembers} />
       </div>
-
-      {editingMember && (
-        <EditMemberDialog
-          member={editingMember}
-          open={isEditDialogOpen}
-          onOpenChange={setIsEditDialogOpen}
-        />
-      )}
     </div>
   );
 }

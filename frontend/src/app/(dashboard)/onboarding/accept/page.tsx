@@ -8,6 +8,7 @@ import { OnboardingFormData } from "@/types/types";
 import { onboardingSchema } from "@/schema/onboardingSchema";
 import { postReq } from "../../../../lib/axios-helpers/apiClient";
 import { EMPLOYEE_SIGNUP } from "../../../../endpoints/employee.endpoint";
+import { useMembersStore } from "@/stores/membersStore";
 
 const AcceptPageContent = () => {
   const {
@@ -18,12 +19,15 @@ const AcceptPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invitationId = searchParams.get("token");
+  const { acceptInvitaion } = useMembersStore();
 
   const onSubmit = async (data: OnboardingFormData) => {
     const payload = { ...data, invitationId };
     try {
-      const response = await postReq(EMPLOYEE_SIGNUP, payload);
-      if (response.status === 201) {
+      const response: any = await postReq(EMPLOYEE_SIGNUP, payload);
+      if (response.status === 200 || response.status === 201) {
+        const email = response?.data.email;
+        acceptInvitaion(email, `${data.firstName} ${data.lastName}`);
         router.push("/map");
       }
     } catch (err) {
