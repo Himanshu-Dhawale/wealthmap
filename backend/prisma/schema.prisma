@@ -11,44 +11,50 @@ model Company {
   id          String       @id @default(uuid())
   name        String
   logoUrl     String?
-  size        String?
-  location    String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  users       User[]
-  invitations Invitation[]
   preferences Json?
+  location    String?
+  size        String?
+  invitations Invitation[]
+  users       User[]
 }
 
 model User {
   id            String   @id @default(uuid())
   email         String   @unique
   passwordHash  String
-  firstName     String?
-  lastName      String?
   role          Role
   isActive      Boolean  @default(true)
   mfaEnabled    Boolean  @default(false)
   acceptedTerms Boolean  @default(false)
+	status        UserStatus @default(ACCEPTED)
   companyId     String
-  company       Company  @relation(fields: [companyId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  firstName     String?
+  lastName      String?
+  company       Company  @relation(fields: [companyId], references: [id])
 }
 
 model Invitation {
   id         String       @id @default(uuid())
   email      String
   companyId  String
-  company    Company      @relation(fields: [companyId], references: [id])
   status     InviteStatus @default(PENDING)
   createdAt  DateTime     @default(now())
   acceptedAt DateTime?
+  company    Company      @relation(fields: [companyId], references: [id])
 }
 
 enum Role {
   ADMIN
   EMPLOYEE
+}
+
+enum UserStatus {
+  ACCEPTED
+  REVOKED
 }
 
 enum InviteStatus {
