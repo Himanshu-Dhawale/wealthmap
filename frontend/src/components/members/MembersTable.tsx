@@ -32,7 +32,13 @@ import { useState } from "react";
 import { ViewActivityDialog } from "./ViewActivity";
 import { Member } from "@/types/types";
 
-export function MembersTable({ members }: { members: Member[] }) {
+export function MembersTable({
+  members,
+  removeMember,
+}: {
+  members: Member[];
+  removeMember: (id: string) => void;
+}) {
   const [viewingActivityFor, setViewingActivityFor] = useState<Member | null>(
     null
   );
@@ -40,18 +46,18 @@ export function MembersTable({ members }: { members: Member[] }) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "active":
-        return <Check className="h-4 w-4 text-green-500" />;
+        return <Check className="w-4 h-4 text-green-500" />;
       case "pending":
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="w-4 h-4 text-yellow-500" />;
       case "inactive":
-        return <X className="h-4 w-4 text-red-500" />;
+        return <X className="w-4 h-4 text-red-500" />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="rounded-md border">
+    <div className="border rounded-md">
       <Table>
         <TableHeader>
           <TableRow>
@@ -68,16 +74,16 @@ export function MembersTable({ members }: { members: Member[] }) {
         </TableHeader>
         <TableBody>
           {members.map((member) => (
-            <TableRow key={member.id}>
+            <TableRow key={`${member.id ?? 'inv'}-${member.email}`}>
               <TableCell className="font-medium">
                 <div className="flex items-center space-x-2">
-                  <User className="h-4 w-4" />
+                  <User className="w-4 h-4" />
                   <span>{member.name}</span>
                 </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4" />
+                  <Mail className="w-4 h-4" />
                   <span>{member.email}</span>
                 </div>
               </TableCell>
@@ -86,14 +92,14 @@ export function MembersTable({ members }: { members: Member[] }) {
                   className="text-start "
                   variant={member.role === "admin" ? "default" : "outline"}
                 >
-                  <Shield className="h-3 w-3 mr-1" />
+                  <Shield className="w-3 h-3 mr-1" />
                   {member.role.toLowerCase()}
                 </Badge>
               </TableCell>
               <TableCell>
                 <Badge variant="outline">
                   {getStatusIcon(member.status)}
-                  <span className=" capitalize">
+                  <span className="capitalize ">
                     {member.status.toLowerCase()}
                   </span>
                 </Badge>
@@ -109,31 +115,34 @@ export function MembersTable({ members }: { members: Member[] }) {
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreVertical className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
+                      <MoreVertical className="w-4 h-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
-                      <Pen size={14} className="h-4 w-4 mr-2" />
+                      <Pen size={14} className="w-4 h-4 mr-2" />
                       Edit Profile
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Key className="h-4 w-4 mr-2" />
+                      <Key className="w-4 h-4 mr-2" />
                       Manage Permissions
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => setViewingActivityFor(member)}
                     >
-                      <Activity className="h-4 w-4 mr-2" />
+                      <Activity className="w-4 h-4 mr-2" />
                       View Activity
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Database className="h-4 w-4 mr-2" />
+                      <Database className="w-4 h-4 mr-2" />
                       Set Data Access
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-red-600">
-                      <Trash2 className="h-4 w-4 mr-2" />
+                    <DropdownMenuItem
+                      className="text-red-600"
+                      onClick={() => removeMember(member.id)}
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
                       Revoke Access
                     </DropdownMenuItem>
                   </DropdownMenuContent>

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 
 export default function ManageMembersPage() {
-  const { members, fetchMembers } = useMembersStore();
+  const { members, fetchMembers, removeMember } = useMembersStore();
   const [searchTerm, setSearchTerm] = useState("");
   const { data: session } = useSession();
 
@@ -26,7 +26,7 @@ export default function ManageMembersPage() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container px-4 py-8 mx-auto">
       <div className="flex flex-col space-y-8">
         <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
           <div>
@@ -44,7 +44,7 @@ export default function ManageMembersPage() {
         </div>
 
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
           <Input
             placeholder="Search members..."
             className="pl-10"
@@ -52,7 +52,7 @@ export default function ManageMembersPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <MembersTable members={filteredMembers} />
+        <MembersTable members={filteredMembers} removeMember={removeMember} />
       </div>
     </div>
   );

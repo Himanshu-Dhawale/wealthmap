@@ -1,9 +1,9 @@
-import { getReq, postReq } from "@/lib/axios-helpers/apiClient";
-import { MembersState } from "@/types/types";
+import { getReq, patchReq, postReq } from "@/lib/axios-helpers/apiClient";
+import { Member, MembersState } from "@/types/types";
 import { create } from "zustand";
 import { toast } from "sonner";
 import { getSession } from "next-auth/react";
-import { EMPLOYEES, EMPLOYEE_INVITE } from "@/endpoints/employee.endpoint";
+import { EMPLOYEES, EMPLOYEE_DEACTIVATE, EMPLOYEE_INVITE } from "@/endpoints/employee.endpoint";
 
 export const useMembersStore = create<MembersState>()((set) => ({
   members: [],
@@ -35,10 +35,26 @@ export const useMembersStore = create<MembersState>()((set) => ({
         member.id === id ? { ...member, ...updates } : member
       ),
     })),
-  removeMember: (id) =>
-    set((state) => ({
-      members: state.members.filter((member) => member.id !== id),
-    })),
+  removeMember: async (id) => {
+    const session = await getSession();
+    const token = session?.user.accessToken;
+    const deactivateAccountEndpoint = `${EMPLOYEE_DEACTIVATE}/${id}/deactivate`;
+    try {
+      const response = await patchReq<{ message: string, members: Member[] }>(
+        deactivateAccountEndpoint,
+        {},
+        token
+      );
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        set(({ members: response.data.members }))
+      }
+    } catch (error) {
+      console.error("API error inviting member:", error);
+      throw error
+    }
+  }
+  ,
 
   inviteMember: async (email, role) => {
     const session = await getSession();
