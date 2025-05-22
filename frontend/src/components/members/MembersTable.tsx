@@ -113,40 +113,14 @@ export function MembersTable({
                   : "Never"}
               </TableCell>
               <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <Pen size={14} className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Key className="w-4 h-4 mr-2" />
-                      Manage Permissions
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setViewingActivityFor(member)}
-                    >
-                      <Activity className="w-4 h-4 mr-2" />
-                      View Activity
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Database className="w-4 h-4 mr-2" />
-                      Set Data Access
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="text-red-600"
-                      onClick={() => removeMember(member.id)}
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Revoke Access
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Button  variant="ghost" 
+                 size="sm" 
+                 className="h-8 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                 onClick={() => removeMember(member.id)}
+                 >
+                <Trash2 className="w-3 h-3 mr-1" />
+                Revoke
+                </Button>
               </TableCell>
             </TableRow>
           ))}
