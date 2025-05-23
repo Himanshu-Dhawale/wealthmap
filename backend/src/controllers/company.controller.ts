@@ -1,6 +1,8 @@
 import { Context } from 'hono';
 import { getPrismaClient } from '../utils/prisma';
 import { UpdateCompanyProfileSchema } from '../schema/company.schema';
+import { getCompanyMembers } from '../utils/getCompanyMembers';
+import { InviteStatus, UserStatus } from '@prisma/client';
 
 export async function getCompanyProfile(c: Context) {
 	try {
@@ -36,56 +38,8 @@ export async function getCompanyTeam(c: Context) {
 	const { companyId } = c.get('jwtPayload');
 	const prisma = getPrismaClient(c.env.DATABASE_URL);
 
-	const users = await prisma.user.findMany({
-		where: { companyId },
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			email: true,
-			role: true,
-			isActive: true,
-			createdAt: true,
-		},
-	});
-
-	const invitations = await prisma.invitation.findMany({
-		where: { companyId },
-		select: {
-			email: true,
-			status: true,
-			createdAt: true,
-			acceptedAt: true,
-		},
-	});
-
-	const userEmails = new Set(users.map((u) => u.email.toLowerCase()));
-
-	const unmatchedInvites = invitations
-		.filter((inv) => !userEmails.has(inv.email.toLowerCase()))
-		.map((invite) => ({
-			id: null,
-			email: invite.email,
-			name: '',
-			role: 'EMPLOYEE',
-			status: invite.status,
-			joinedAt: invite.acceptedAt ?? invite.createdAt,
-			isActive: false,
-		}));
-
-	const acceptedUsers = users.map((user) => ({
-		id: user.id,
-		email: user.email,
-		name: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
-		role: user.role,
-		status: 'ACCEPTED',
-		joinedAt: user.createdAt,
-		isActive: user.isActive,
-	}));
-
-	const team = [...acceptedUsers, ...unmatchedInvites];
-
-	return c.json({ members: team }, 200);
+	const members = await getCompanyMembers(prisma as any, companyId);
+	return c.json({ members });
 }
 
 export async function updateCompanyProfile(c: Context) {
@@ -110,24 +64,42 @@ export async function updateCompanyProfile(c: Context) {
 
 export async function deactivateEmployee(c: Context) {
 	try {
-		const { companyId } = c.get('jwtPayload');
+		const { companyId, userId: requestingUserId } = c.get('jwtPayload');
 		const prisma = getPrismaClient(c.env.DATABASE_URL);
 
-		const userId = c.req.param('id');
+		const targetUserId = c.req.param('id');
+
+		if (targetUserId === requestingUserId) {
+			return c.json({ message: "You can't deactivate your own account." }, 403);
+		}
+
 		const user = await prisma.user.findFirst({
-			where: { id: userId, companyId },
+			where: { id: targetUserId, companyId },
 		});
 
 		if (!user) {
 			return c.json({ message: 'User not found' }, 404);
 		}
 
-		const updated = await prisma.user.update({
-			where: { id: userId },
-			data: { isActive: false },
+		await prisma.user.update({
+			where: { id: targetUserId },
+			data: {
+				isActive: false,
+				status: UserStatus.REVOKED,
+			},
 		});
 
-		return c.json({ message: 'User deactivated', user: updated });
+		await prisma.invitation.updateMany({
+			where: {
+				email: user.email,
+				companyId,
+				status: InviteStatus.PENDING,
+			},
+			data: { status: InviteStatus.REVOKED },
+		});
+		const members = await getCompanyMembers(prisma as any, companyId);
+
+		return c.json({ message: 'User deactivated', members }, 200);
 	} catch (error) {
 		console.error('Deactivate employee error:', error);
 		return c.json({ message: 'Internal server error' }, 500);
