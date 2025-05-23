@@ -4,6 +4,7 @@ import { hashPassword } from '../utils/auth.utils';
 import { getPrismaClient } from '../utils/prisma';
 import { LoginSchema, RegisterSchema } from '../schema/auth.schema';
 import { uploadToCloudinaryUnsigned } from '../utils/cloudinary';
+import { generateMfaSecret, verifyMfaToken } from '../utils/mfa';
 export async function registerCompany(c: Context) {
 	try {
 		const validation = RegisterSchema.safeParse(await c.req.json());
@@ -151,4 +152,45 @@ export async function login(c: Context) {
 			500,
 		);
 	}
+}
+
+export async function setupMfa(c: Context) {
+	const { userId } = c.get('jwtPayload');
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
+
+	const user = await prisma.user.findUnique({ where: { id: userId } });
+	if (!user) return c.json({ message: 'User not found' }, 404);
+
+	const { secret } = generateMfaSecret(user.email);
+
+	await prisma.user.update({
+		where: { id: userId },
+		data: { mfaSecret: secret },
+	});
+
+	return c.json({
+		message: 'Use this secret key in your authenticator app',
+		secret,
+		issuer: 'WealthMap',
+		account: user.email,
+	});
+}
+
+export async function verifyMfaSetup(c: Context) {
+	const { token } = await c.req.json();
+	const { userId } = c.get('jwtPayload');
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
+
+	const user = await prisma.user.findUnique({ where: { id: userId } });
+	if (!user?.mfaSecret) return c.json({ message: 'MFA not initialized' }, 400);
+
+	const isValid = verifyMfaToken(user.mfaSecret, token);
+	if (!isValid) return c.json({ message: 'Invalid token' }, 401);
+
+	await prisma.user.update({
+		where: { id: userId },
+		data: { mfaEnabled: true },
+	});
+
+	return c.json({ message: 'MFA enabled successfully' });
 }
