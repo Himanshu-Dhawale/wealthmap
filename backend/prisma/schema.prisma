@@ -27,6 +27,7 @@ model User {
   role          Role
   isActive      Boolean  @default(true)
   mfaEnabled    Boolean  @default(false)
+	mfaSecret     String?
   acceptedTerms Boolean  @default(false)
 	status        UserStatus @default(ACCEPTED)
   companyId     String
