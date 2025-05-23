@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { User, Mail, Shield, Check, Clock, X } from "lucide-react";
 import { toast } from "sonner";
-import { Member } from "@/types/types";
+import { Member, Status } from "@/types/types";
 
 interface EditMemberDialogProps {
   member: Member;
@@ -33,7 +33,7 @@ export function EditMemberDialog({
 }: EditMemberDialogProps) {
   const [name, setName] = useState(member.name);
   const [role, setRole] = useState<"admin" | "member">(member.role);
-  const [status, setStatus] = useState<"active" | "pending" | "inactive">(
+  const [status, setStatus] = useState<Status>(
     member.status
   );
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +69,7 @@ export function EditMemberDialog({
           <div className="space-y-2">
             <label className="text-sm font-medium leading-none">Name</label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <User className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
               <Input
                 placeholder="Member name"
                 className="pl-10"
@@ -82,7 +82,7 @@ export function EditMemberDialog({
           <div className="space-y-2">
             <label className="text-sm font-medium leading-none">Email</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Mail className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
               <Input
                 type="email"
                 value={member.email}
@@ -94,7 +94,7 @@ export function EditMemberDialog({
           <div className="space-y-2">
             <label className="text-sm font-medium leading-none">Role</label>
             <div className="relative">
-              <Shield className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Shield className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-muted-foreground" />
               <Select
                 value={role}
                 onValueChange={(value: "admin" | "member") => setRole(value)}
@@ -113,7 +113,7 @@ export function EditMemberDialog({
             <label className="text-sm font-medium leading-none">Status</label>
             <Select
               value={status}
-              onValueChange={(value: "active" | "pending" | "inactive") =>
+              onValueChange={(value: Status) =>
                 setStatus(value)
               }
             >
@@ -123,19 +123,19 @@ export function EditMemberDialog({
               <SelectContent className="bg-white">
                 <SelectItem value="active">
                   <div className="flex items-center">
-                    <Check className="h-4 w-4 mr-2 text-green-500" />
+                    <Check className="w-4 h-4 mr-2 text-green-500" />
                     Active
                   </div>
                 </SelectItem>
                 <SelectItem value="pending">
                   <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-2 text-yellow-500" />
+                    <Clock className="w-4 h-4 mr-2 text-yellow-500" />
                     Pending
                   </div>
                 </SelectItem>
                 <SelectItem value="inactive">
                   <div className="flex items-center">
-                    <X className="h-4 w-4 mr-2 text-red-500" />
+                    <X className="w-4 h-4 mr-2 text-red-500" />
                     Inactive
                   </div>
                 </SelectItem>
