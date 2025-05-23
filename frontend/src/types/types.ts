@@ -94,3 +94,13 @@ export type MembersState = {
   inviteMember: (email: string, role: "admin" | "member") => Promise<void>;
   acceptInvitaion: (invitationId: string | null, name: string) => void;
 };
+
+
+export interface Report {
+  id: string;
+  name: string;
+  address: string;
+  date: string;
+  status: "New" | "Reviewed";
+}
+
