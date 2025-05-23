@@ -7,26 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Check,
-  Clock,
-  X,
-  MoreVertical,
-  Shield,
-  User,
-  Mail,
-  Activity,
-  Key,
-  Database,
-  Trash2,
-  Pen,
-} from "lucide-react";
+import { Check, Clock, X, Shield, User, Mail, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ViewActivityDialog } from "./ViewActivity";
@@ -67,14 +48,12 @@ export function MembersTable({
             <TableHead>Status</TableHead>
             <TableHead>Joined</TableHead>
             <TableHead>Last Active</TableHead>
-            {/* <TableHead>Permissions</TableHead>
-              <TableHead>Data Access</TableHead> */}
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {members.map((member) => (
-            <TableRow key={`${member.id ?? 'inv'}-${member.email}`}>
+            <TableRow key={`${member.id ?? "inv"}-${member.email}`}>
               <TableCell className="font-medium">
                 <div className="flex items-center space-x-2">
                   <User className="w-4 h-4" />
@@ -113,13 +92,14 @@ export function MembersTable({
                   : "Never"}
               </TableCell>
               <TableCell>
-                <Button  variant="ghost" 
-                 size="sm" 
-                 className="h-8 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
-                 onClick={() => removeMember(member.id)}
-                 >
-                <Trash2 className="w-3 h-3 mr-1" />
-                Revoke
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => removeMember(member.id)}
+                >
+                  <Trash2 className="w-3 h-3 mr-1" />
+                  Revoke
                 </Button>
               </TableCell>
             </TableRow>
