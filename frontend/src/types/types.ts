@@ -47,6 +47,7 @@ export type Property = {
   // Add more fields as needed
 };
 
+
 export type MapState = {
   selectedProperty: Property | null;
   setSelectedProperty: (p: Property | null) => void;
@@ -65,13 +66,19 @@ export type MapState = {
   isLoading: boolean;
 };
 
+export enum Status {
+  ACTIVE = "active",
+  PENDING = "pending",
+  INACIVE = "inactive"
+}
+
 // member types
 export type Member = {
   id: string;
   name: string;
   email: string;
   role: "admin" | "member";
-  status: "active" | "pending" | "inactive";
+  status: Status;
   joinedAt: Date;
   lastActive?: string;
   permissions?: string[];
