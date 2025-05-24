@@ -194,3 +194,17 @@ export async function verifyMfaSetup(c: Context) {
 
 	return c.json({ message: 'MFA enabled successfully' });
 }
+
+export async function getMfaStatus(c: Context) {
+	const { userId } = c.get('jwtPayload');
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
+
+	const user = await prisma.user.findUnique({
+		where: { id: userId },
+		select: { mfaEnabled: true },
+	});
+
+	if (!user) return c.json({ message: 'User not found' }, 404);
+
+	return c.json({ mfaEnabled: user.mfaEnabled });
+}
