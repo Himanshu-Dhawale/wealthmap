@@ -113,6 +113,7 @@ export type AuthState = {
     email: string
   ) => Promise<{ secret: string } | undefined>;
   verify2FA: (code: string) => Promise<void>;
+  disable2FA: () => void;
   fetch2FAStatus: () => Promise<void>;
 };
 
