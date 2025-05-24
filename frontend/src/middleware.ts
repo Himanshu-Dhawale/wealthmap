@@ -25,4 +25,11 @@ export async function middleware(request:NextRequest) {
     req: request,
     secret: process.env.NEXTAUTH_SECRET
   })
+
+    if (isProtectedRoute && !token) {
+    const signInUrl = new URL('/login', request.url)
+    signInUrl.searchParams.set('callbackUrl', request.nextUrl.href)
+    return NextResponse.redirect(signInUrl)
+  }
+
 }
