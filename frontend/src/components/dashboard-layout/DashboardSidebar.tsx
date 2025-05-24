@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import DashboardNavItem from "./DashboardNavItem";
 import {
   Map,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 
 const DashboardSidebar = () => {
+  const { data: session } = useSession();
   return (
     <nav className="hidden md:flex md:flex-shrink-0">
       <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
@@ -39,11 +41,13 @@ const DashboardSidebar = () => {
               label="Manage Members"
               href="/members"
             />
-            <DashboardNavItem
-              icon={<Settings size={20} />}
-              label="Settings"
-              href="/settings"
-            />
+            {session?.user.role !== "ADMIN" && (
+              <DashboardNavItem
+                icon={<Settings size={20} />}
+                label="Settings"
+                href="/settings"
+              />
+            )}
           </nav>
         </div>
       </div>
