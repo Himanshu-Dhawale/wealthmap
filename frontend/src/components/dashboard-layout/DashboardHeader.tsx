@@ -14,7 +14,7 @@ const DashboardHeader = () => {
       const userEmail = session.user.email;
       const localStorageKey = `user_avatar_color_${userEmail}`;
 
-      let storedColor = localStorage.getItem(localStorageKey);
+      const storedColor = localStorage.getItem(localStorageKey);
       if (storedColor) {
         setAvatarColor(storedColor);
       } else {
