@@ -18,4 +18,7 @@ export async function middleware(request:NextRequest) {
    const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   )
+
+   const isAuthRoute = authRoutes.includes(pathname)
+
 }
