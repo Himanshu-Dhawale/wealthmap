@@ -30,6 +30,10 @@ export async function middleware(request:NextRequest) {
     const signInUrl = new URL('/login', request.url)
     signInUrl.searchParams.set('callbackUrl', request.nextUrl.href)
     return NextResponse.redirect(signInUrl)
+    }
+
+      if (isAuthRoute && token) {
+    return NextResponse.redirect(new URL('/map', request.url))
   }
 
 }
