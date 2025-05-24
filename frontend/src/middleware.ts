@@ -33,7 +33,10 @@ export async function middleware(request:NextRequest) {
     }
 
       if (isAuthRoute && token) {
-    return NextResponse.redirect(new URL('/map', request.url))
-  }
+        return NextResponse.redirect(new URL('/map', request.url))
+     }
+      
+     
+     return NextResponse.next()
 
 }
