@@ -111,6 +111,17 @@ export const useAuthStore = create<AuthState>()(
           console.error(error);
         }
       },
+      disable2FA: () => {
+        set((state) => ({
+          user: state.user
+            ? {
+                ...state.user,
+                twoFAStatus: TwoFAStatus.DISABLED,
+                twoFASecret: undefined,
+              }
+            : null,
+        }));
+      },
     }),
     {
       name: "auth-storage",
