@@ -30,15 +30,26 @@ const Navbar = () => {
                 {item}
               </motion.a>
             ))}
-            <Link href={"/signup"}>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-4 py-2 bg-primary-gradient text-white rounded-lg font-medium shadow-md"
-              >
-                Request Demo
-              </motion.button>
-            </Link>
+            <div>
+              <Link href={"/login"}>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-1.5 mr-2 text-purple-gradient-end border border-purple-gradient-end bg-white rounded-lg font-medium shadow-md"
+                >
+                  Login
+                </motion.button>
+              </Link>
+              <Link href={"/signup"}>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 bg-primary-gradient text-white rounded-lg font-medium shadow-md"
+                >
+                  Request Demo
+                </motion.button>
+              </Link>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
