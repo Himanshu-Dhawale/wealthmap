@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ViewActivityDialog } from "./ViewActivity";
 import { Member } from "@/types/types";
-import { useSession } from "next-auth/react";
 
 export function MembersTable({
   members,
