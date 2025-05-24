@@ -25,6 +25,7 @@ export default function ManageMembersPage() {
       member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  
   return (
     <div className="container px-4 py-8 mx-auto">
       <div className="flex flex-col space-y-8">
