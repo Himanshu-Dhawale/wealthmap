@@ -13,5 +13,9 @@ export async function middleware(request:NextRequest) {
   const protectedRoutes: string[] = ['/map', "/members", "/reports", "/wealth-analysis"];
 
    const authRoutes: string[] = ['/login', '/register']
-  const { pathname } = request.nextUrl
+   const { pathname } = request.nextUrl
+
+   const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  )
 }
