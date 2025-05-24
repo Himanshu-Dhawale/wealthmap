@@ -10,5 +10,8 @@ export const config = {
 }
 
 export async function middleware(request:NextRequest) {
-  const protectedRoutes: string[] = ['/map', "/members", "/reports", "/wealth-analysis"]
+  const protectedRoutes: string[] = ['/map', "/members", "/reports", "/wealth-analysis"];
+
+   const authRoutes: string[] = ['/login', '/register']
+  const { pathname } = request.nextUrl
 }
