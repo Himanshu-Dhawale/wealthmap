@@ -101,7 +101,6 @@ export enum TwoFAStatus {
 
 export type User = {
   id: string;
-  name: string;
   email: string;
   twoFAStatus: TwoFAStatus;
   twoFASecret?: string;
@@ -114,7 +113,7 @@ export type AuthState = {
     email: string
   ) => Promise<{ secret: string } | undefined>;
   verify2FA: (code: string) => Promise<void>;
-  disable2FA: () => Promise<void>;
+  fetch2FAStatus: () => Promise<void>;
 };
 
 export interface Report {
