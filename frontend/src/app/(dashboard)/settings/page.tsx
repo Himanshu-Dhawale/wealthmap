@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
@@ -13,13 +13,18 @@ export default function SecuritySettingsPage() {
   const [isVerificationDialogOpen, setIsVerificationDialogOpen] =
     useState(false);
 
-  const { enable2FA, verify2FA, user, disable2FA } = useAuthStore();
+  const { enable2FA, fetch2FAStatus, verify2FA, user } = useAuthStore();
   const email = session?.user.email ?? "";
   const id = session?.user.id ?? "";
+
+  useEffect(() => {
+    fetch2FAStatus();
+  }, [fetch2FAStatus]);
 
   const handleEnable2FA = async () => {
     try {
       await enable2FA(id, email);
+
       toast.success("2FA setup initiated");
     } catch (error) {
       toast.error("Failed to initiate 2FA setup");
@@ -29,7 +34,6 @@ export default function SecuritySettingsPage() {
 
   const handleDisable2FA = async () => {
     try {
-      await disable2FA();
       toast.success("2FA has been disabled");
     } catch (error) {
       toast.error("Failed to disable 2FA");
