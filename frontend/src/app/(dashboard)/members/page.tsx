@@ -25,7 +25,6 @@ export default function ManageMembersPage() {
       member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  console.log(filteredMembers);
   
   return (
     <div className="container px-4 py-8 mx-auto">

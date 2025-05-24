@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ViewActivityDialog } from "./ViewActivity";
 import { Member } from "@/types/types";
+import { useSession } from "next-auth/react";
 
 export function MembersTable({
   members,
@@ -23,6 +24,8 @@ export function MembersTable({
   const [viewingActivityFor, setViewingActivityFor] = useState<Member | null>(
     null
   );
+
+  
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -92,7 +95,8 @@ export function MembersTable({
                   : "Never"}
               </TableCell>
               <TableCell>
-                <Button
+                {member.status.toLowerCase() !== "revoked" && 
+   member.role.toLowerCase() !== "admin" && (<Button
                   variant="ghost"
                   size="sm"
                   className="h-8 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
@@ -100,7 +104,7 @@ export function MembersTable({
                 >
                   <Trash2 className="w-3 h-3 mr-1" />
                   Revoke
-                </Button>
+                </Button>)}
               </TableCell>
             </TableRow>
           ))}
