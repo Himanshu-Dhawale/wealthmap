@@ -8,3 +8,7 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico|auth).*)',
   ],
 }
+
+export async function middleware(request:NextRequest) {
+  const protectedRoutes: string[] = ['/map', "/members", "/reports", "/wealth-analysis"]
+}
