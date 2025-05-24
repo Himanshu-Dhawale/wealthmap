@@ -20,5 +20,9 @@ export async function middleware(request:NextRequest) {
   )
 
    const isAuthRoute = authRoutes.includes(pathname)
-
+ 
+   const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET
+  })
 }
