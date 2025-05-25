@@ -7,7 +7,7 @@ import { propertiesData } from "@/data/proerties";
 import { Home, Building, TreeDeciduous } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
 import { Property } from "@/types/types";
-import { PropertyHoverCard } from "./map-interface/PropertyHoverCard";
+import { PropertyHoverCard } from "./PropertyHoverCard";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 

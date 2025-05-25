@@ -31,16 +31,16 @@ const SelectedPropertyCard = () => {
   if (!selectedProperty) return null;
 
   return (
-    <div className="fixed z-50 w-full max-w-sm overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl bottom-4 right-4 md:right-8">
+    <div className="fixed z-40 w-full max-w-sm overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl bottom-4 right-4 md:right-8">
       <div className="relative">
         {selectedProperty.image ? (
           <div className="relative w-full h-48">
-          <Image
-            src={selectedProperty.image}
-            alt={selectedProperty.title}
-            className="absolute object-cover"
-            fill
-          />
+            <Image
+              src={selectedProperty.image}
+              alt={selectedProperty.title}
+              className="absolute object-cover"
+              fill
+            />
           </div>
         ) : (
           <div className="flex items-center justify-center w-full h-48 bg-gray-100">

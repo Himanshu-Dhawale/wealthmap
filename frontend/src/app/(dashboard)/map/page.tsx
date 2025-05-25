@@ -1,6 +1,6 @@
-import PropertyMap from "@/components/PropertyMap";
-import SelectedPropertyCard from "@/components/SelectedPropertyCard";
-import MapFilters from "@/components/MapFilters";
+import PropertyMap from "@/components/map-interface/PropertyMap";
+import SelectedPropertyCard from "@/components/map-interface/SelectedPropertyCard";
+import MapFilters from "@/components/map-interface/MapFilters";
 
 const MapPage = () => {
   return (
