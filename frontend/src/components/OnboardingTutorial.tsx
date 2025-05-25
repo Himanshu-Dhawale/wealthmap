@@ -74,6 +74,26 @@ const handleSkip = () => {
     </div>
   )}
 </div>
+<div className="flex justify-between p-4 border-t">
+  <Button
+    variant="ghost"
+    onClick={handleSkip}
+    className="text-gray-600 hover:text-gray-900"
+  >
+    Skip Tutorial
+  </Button>
+  <div className="flex items-center gap-4">
+    <span className="text-sm text-gray-500">
+      {steps[currentStep].step}
+    </span>
+    <Button
+      onClick={handleNext}
+      className="px-6 py-2 font-medium text-white transition-all rounded-lg shadow-md bg-primary-gradient hover:shadow-lg"
+    >
+      {currentStep === steps.length - 1 ? "Get Started" : "Next"}
+    </Button>
+  </div>
+</div>
   </motion.div>
   )
 }
