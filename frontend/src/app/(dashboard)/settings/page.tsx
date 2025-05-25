@@ -4,6 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
 import { useSession } from "next-auth/react";
+import { LoaderCircle } from "lucide-react";
 import VerificationDialog from "@/components/settings-2fa/VerificationDialog";
 import Setup2FA from "@/components/settings-2fa/Setup2FA";
 
@@ -13,7 +14,7 @@ export default function SecuritySettingsPage() {
   const [isVerificationDialogOpen, setIsVerificationDialogOpen] =
     useState(false);
 
-  const { enable2FA, fetch2FAStatus, disable2FA, verify2FA, user } =
+  const { enable2FA, fetch2FAStatus, disable2FA, verify2FA, user, isLoading } =
     useAuthStore();
   const email = session?.user.email ?? "";
   const id = session?.user.id ?? "";
@@ -82,15 +83,22 @@ export default function SecuritySettingsPage() {
               : "Disabled"}
           </p>
         </div>
-        <Switch
-          id="2fa-toggle"
-          checked={
-            user?.twoFAStatus === "ENABLED" ||
-            user?.twoFAStatus === "PENDING_VERIFICATION"
-          }
-          onCheckedChange={handle2FAToggle}
-          disabled={user?.twoFAStatus === "PENDING_VERIFICATION"}
-        />
+        {isLoading ? (
+          <LoaderCircle
+            size={20}
+            className="spinner text-purple-gradient-end"
+          />
+        ) : (
+          <Switch
+            id="2fa-toggle"
+            checked={
+              user?.twoFAStatus === "ENABLED" ||
+              user?.twoFAStatus === "PENDING_VERIFICATION"
+            }
+            onCheckedChange={handle2FAToggle}
+            disabled={user?.twoFAStatus === "PENDING_VERIFICATION"}
+          />
+        )}
       </div>
       {user?.twoFAStatus === "PENDING_VERIFICATION" && (
         <Setup2FA setIsVerificationDialogOpen={setIsVerificationDialogOpen} />
