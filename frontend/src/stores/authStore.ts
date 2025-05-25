@@ -15,7 +15,9 @@ export const useAuthStore = create<AuthState>()(
         twoFAStatus: TwoFAStatus.DISABLED,
         twoFASecret: "",
       },
+      isLoading: false,
       fetch2FAStatus: async () => {
+        set((state) => ({ ...state, isLoading: true }));
         try {
           const session = await getSession();
           const token = session?.user.accessToken;
@@ -45,6 +47,8 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch (error) {
           console.error("Failed to fetch 2FA status:", error);
+        } finally {
+          set((state) => ({ ...state, isLoading: false }));
         }
       },
       enable2FA: async (id, email) => {
