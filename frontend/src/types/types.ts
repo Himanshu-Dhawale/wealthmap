@@ -108,6 +108,7 @@ export type User = {
 
 export type AuthState = {
   user: User | null;
+  isLoading: boolean;
   enable2FA: (
     id: string,
     email: string
