@@ -1,6 +1,7 @@
 "use client";
 
-import React from 'react'
+import React from 'react';
+import { motion } from "framer-motion";
 interface OnboardingTutorialProps {
   onComplete: () => void;
 }
@@ -48,7 +49,14 @@ const handleSkip = () => {
 
 
   return (
-    <div>OnboardingTutorial</div>
+    <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.3 }}
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  >
+    
+  </motion.div>
   )
 }
 
