@@ -55,7 +55,14 @@ const handleSkip = () => {
     transition={{ duration: 0.3 }}
     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
   >
-    
+     <div className="p-6">
+          <p className="text-gray-700">{steps[currentStep].content}</p>
+          {steps[currentStep].progress && (
+            <div className="mt-4 text-sm text-gray-500">
+              {steps[currentStep].progress}
+            </div>
+          )}
+        </div>
   </motion.div>
   )
 }
