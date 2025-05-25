@@ -67,13 +67,13 @@ const handleSkip = () => {
           <h2 className="text-2xl font-bold text-white">{steps[currentStep].title}</h2>
         </div>
      <div className="p-6">
-          <p className="text-gray-700">{steps[currentStep].content}</p>
-          {steps[currentStep].progress && (
-            <div className="mt-4 text-sm text-gray-500">
-              {steps[currentStep].progress}
-            </div>
-          )}
-        </div>
+  <p className="text-gray-700">{steps[currentStep].content}</p>
+  {steps[currentStep].progress && (
+    <div className="mt-4 text-sm text-gray-500">
+      {steps[currentStep].progress}
+    </div>
+  )}
+</div>
   </motion.div>
   )
 }
