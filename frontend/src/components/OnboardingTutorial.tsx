@@ -63,6 +63,9 @@ const handleSkip = () => {
 >
   <X className="w-5 h-5 text-gray-500" />
 </button>
+ <div className="p-6 text-center bg-primary-gradient">
+          <h2 className="text-2xl font-bold text-white">{steps[currentStep].title}</h2>
+        </div>
      <div className="p-6">
           <p className="text-gray-700">{steps[currentStep].content}</p>
           {steps[currentStep].progress && (
