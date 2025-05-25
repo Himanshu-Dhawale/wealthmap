@@ -34,6 +34,19 @@ const OnboardingTutorial = () => {
   },
 ];
 
+const handleNext = () => {
+  if (currentStep < steps.length - 1) {
+    setCurrentStep(currentStep + 1);
+  } else {
+    onComplete();
+  }
+};
+
+const handleSkip = () => {
+  onComplete();
+};
+
+
   return (
     <div>OnboardingTutorial</div>
   )
