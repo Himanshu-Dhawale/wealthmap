@@ -6,6 +6,7 @@ import companyRouter from './routes/company.routes';
 import propertyRouter from './routes/property.routes';
 import bookmarkRouter from './routes/bookmark.routes';
 import ownerRouter from './routes/owner.routes';
+import reportRouter from './routes/report.routes';
 
 const app = new Hono<{
 	Bindings: {
@@ -20,5 +21,6 @@ app.route('/company', companyRouter);
 app.route('/properties', propertyRouter);
 app.route('/property', bookmarkRouter);
 app.route('/owner', ownerRouter);
+app.route('/report', reportRouter);
 
 export default app;
