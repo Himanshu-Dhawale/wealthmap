@@ -27,6 +27,46 @@ export const mockProperties = [
 		},
 		image:
 			'https://www.usatoday.com/gcdn/-mm-/481602f6d9edcd4edf3b3b8a2ff6d2d98ae8eb24/c=0-0-507-286/local/-/media/USATODAY/USATODAY/2014/04/11//1397233607000-144292803.jpg?width=1200&disable=upscale&format=pjpg&auto=webp',
+		ownershipHistory: [
+			{
+				owner: 'Richard Kensington',
+				startDate: '2018-05-15',
+				endDate: null,
+				purchasePrice: 3100000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Broadway Properties LLC',
+				startDate: '2010-11-20',
+				endDate: '2018-05-15',
+				purchasePrice: 2200000,
+				salePrice: 3100000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2018-05-15',
+				type: 'Purchase',
+				amount: 3100000,
+				parties: ['Richard Kensington', 'Broadway Properties LLC'],
+				documentNumber: '2018-04567',
+			},
+			{
+				date: '2015-03-10',
+				type: 'Refinance',
+				amount: 2500000,
+				parties: ['Chase Bank'],
+				documentNumber: '2015-03218',
+			},
+			{
+				date: '2010-11-20',
+				type: 'Purchase',
+				amount: 2200000,
+				parties: ['Broadway Properties LLC', 'Suffolk Realty Trust'],
+				documentNumber: '2010-17892',
+			},
+		],
 	},
 	{
 		id: '20A-Clendenny-Ave,-New-York,-NJ-07304',
@@ -58,6 +98,54 @@ export const mockProperties = [
 			email: 'emily.v@vanderbilt.org',
 		},
 		image: 'https://expatnetwork.com/wp-content/uploads/2019/01/dreamstime_xl_american-home.jpg',
+		ownershipHistory: [
+			{
+				owner: 'Emily Vanderbilt',
+				startDate: '2019-08-22',
+				endDate: null,
+				purchasePrice: 575000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Michael Thompson',
+				startDate: '2014-06-10',
+				endDate: '2019-08-22',
+				purchasePrice: 420000,
+				salePrice: 575000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Sarah Johnson',
+				startDate: '2008-09-05',
+				endDate: '2014-06-10',
+				purchasePrice: 385000,
+				salePrice: 420000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2019-08-22',
+				type: 'Purchase',
+				amount: 575000,
+				parties: ['Emily Vanderbilt', 'Michael Thompson'],
+				documentNumber: '2019-05678',
+			},
+			{
+				date: '2016-11-15',
+				type: 'Refinance',
+				amount: 450000,
+				parties: ['Wells Fargo'],
+				documentNumber: '2016-07892',
+			},
+			{
+				date: '2014-06-10',
+				type: 'Purchase',
+				amount: 420000,
+				parties: ['Michael Thompson', 'Sarah Johnson'],
+				documentNumber: '2014-03456',
+			},
+		],
 	},
 	{
 		id: '321-321-54th-St,-and-320-53rd,-New-York,-NJ-07093',
@@ -87,6 +175,46 @@ export const mockProperties = [
 		},
 		image:
 			'https://www.zillowstatic.com/bedrock/app/uploads/sites/47/GA_ATL_DOWNTOWN_82792_078-RT_RT_cropRT-5f9e47-1440x960.jpg',
+		ownershipHistory: [
+			{
+				owner: 'Richard Kensington',
+				startDate: '2017-03-12',
+				endDate: null,
+				purchasePrice: 1420000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Hudson Land Trust',
+				startDate: '2009-11-30',
+				endDate: '2017-03-12',
+				purchasePrice: 980000,
+				salePrice: 1420000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2017-03-12',
+				type: 'Purchase',
+				amount: 1420000,
+				parties: ['Richard Kensington', 'Hudson Land Trust'],
+				documentNumber: '2017-01234',
+			},
+			{
+				date: '2014-08-25',
+				type: 'Tax Lien',
+				amount: 12500,
+				agency: 'Hudson County',
+				documentNumber: 'TL-2014-567',
+			},
+			{
+				date: '2009-11-30',
+				type: 'Purchase',
+				amount: 980000,
+				parties: ['Hudson Land Trust', '53rd Street LLC'],
+				documentNumber: '2009-08976',
+			},
+		],
 	},
 	{
 		id: '20-Pine-St,-Apt-1714,-New-York,-NY-10005',
@@ -121,6 +249,46 @@ export const mockProperties = [
 		},
 		image:
 			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeQRjITVvK6zEhqwWUuMHPfVKpxWNGFsVQPw&s',
+		ownershipHistory: [
+			{
+				owner: 'Alexander Rothschild',
+				startDate: '2016-09-18',
+				endDate: null,
+				purchasePrice: 2250000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Pine Street Holdings',
+				startDate: '2012-04-05',
+				endDate: '2016-09-18',
+				purchasePrice: 1800000,
+				salePrice: 2250000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2016-09-18',
+				type: 'Purchase',
+				amount: 2250000,
+				parties: ['Alexander Rothschild', 'Pine Street Holdings'],
+				documentNumber: '2016-07865',
+			},
+			{
+				date: '2014-01-15',
+				type: 'Refinance',
+				amount: 1950000,
+				parties: ['Bank of America'],
+				documentNumber: '2014-00543',
+			},
+			{
+				date: '2012-04-05',
+				type: 'Purchase',
+				amount: 1800000,
+				parties: ['Pine Street Holdings', 'Financial District LLC'],
+				documentNumber: '2012-02345',
+			},
+		],
 	},
 	{
 		id: '20-Park-Ave,-Apt-5C,-New-York,-NY-10016',
@@ -153,6 +321,46 @@ export const mockProperties = [
 		},
 		image:
 			'https://www.ptireturns.com/blog/wp-content/uploads/2023/12/Rent-US-property-from-overseas.jpg',
+		ownershipHistory: [
+			{
+				owner: 'Olivia Astor',
+				startDate: '2018-11-30',
+				endDate: null,
+				purchasePrice: 1180000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Robert Chen',
+				startDate: '2015-07-14',
+				endDate: '2018-11-30',
+				purchasePrice: 950000,
+				salePrice: 1180000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2018-11-30',
+				type: 'Purchase',
+				amount: 1180000,
+				parties: ['Olivia Astor', 'Robert Chen'],
+				documentNumber: '2018-08976',
+			},
+			{
+				date: '2017-02-20',
+				type: 'Home Equity Loan',
+				amount: 150000,
+				parties: ['Citibank'],
+				documentNumber: '2017-01234',
+			},
+			{
+				date: '2015-07-14',
+				type: 'Purchase',
+				amount: 950000,
+				parties: ['Robert Chen', 'Park Avenue Condo Corp'],
+				documentNumber: '2015-04567',
+			},
+		],
 	},
 	{
 		id: '227-E-50th-St,-Apt-4,-New-York,-NY-10022',
@@ -184,6 +392,46 @@ export const mockProperties = [
 			email: 'alex.rothschild@rothcapital.com',
 		},
 		image: 'https://www.naproperties.com/wp-content/uploads/HomeHero.jpg',
+		ownershipHistory: [
+			{
+				owner: 'Alexander Rothschild',
+				startDate: '2017-06-25',
+				endDate: null,
+				purchasePrice: 2550000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Midtown Commercial LLC',
+				startDate: '2013-09-12',
+				endDate: '2017-06-25',
+				purchasePrice: 2100000,
+				salePrice: 2550000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2017-06-25',
+				type: 'Purchase',
+				amount: 2550000,
+				parties: ['Alexander Rothschild', 'Midtown Commercial LLC'],
+				documentNumber: '2017-03456',
+			},
+			{
+				date: '2015-10-18',
+				type: 'Commercial Loan',
+				amount: 2300000,
+				parties: ['Goldman Sachs'],
+				documentNumber: '2015-06789',
+			},
+			{
+				date: '2013-09-12',
+				type: 'Purchase',
+				amount: 2100000,
+				parties: ['Midtown Commercial LLC', '50th Street Partners'],
+				documentNumber: '2013-05678',
+			},
+		],
 	},
 	{
 		id: '235-E-46th-St,-Apt-5H,-New-York,-NY-10017',
@@ -215,6 +463,46 @@ export const mockProperties = [
 		},
 		image:
 			'https://img.probuilder.com/files/base/ebm/probuilder/image/2024/10/66fdc5bade5fd1b0025497a7-mansion.png?auto=format,compress&fit=fill&fill=blur&q=45&w=640&width=640',
+		ownershipHistory: [
+			{
+				owner: 'Nathaniel Whitmore',
+				startDate: '2019-04-10',
+				endDate: null,
+				purchasePrice: 825000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Turtle Bay Associates',
+				startDate: '2016-02-28',
+				endDate: '2019-04-10',
+				purchasePrice: 725000,
+				salePrice: 825000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2019-04-10',
+				type: 'Purchase',
+				amount: 825000,
+				parties: ['Nathaniel Whitmore', 'Turtle Bay Associates'],
+				documentNumber: '2019-02345',
+			},
+			{
+				date: '2017-08-15',
+				type: 'Refinance',
+				amount: 700000,
+				parties: ['HSBC'],
+				documentNumber: '2017-04567',
+			},
+			{
+				date: '2016-02-28',
+				type: 'Purchase',
+				amount: 725000,
+				parties: ['Turtle Bay Associates', '46th Street LLC'],
+				documentNumber: '2016-01234',
+			},
+		],
 	},
 	{
 		id: '222-E-39th-St,-Apt-23C,-New-York,-NY-10016',
@@ -247,6 +535,46 @@ export const mockProperties = [
 		},
 		image:
 			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0-68zGELcCKlx5mTmAnn4RaFpGzRfeiEe74jJANFqvyugcm1GzAqa-6xSz0Bz9KssZFE&usqp=CAU',
+		ownershipHistory: [
+			{
+				owner: 'Olivia Astor',
+				startDate: '2020-01-15',
+				endDate: null,
+				purchasePrice: 575000,
+				source: 'County Records',
+			},
+			{
+				owner: 'Murray Hill Properties',
+				startDate: '2017-05-20',
+				endDate: '2020-01-15',
+				purchasePrice: 495000,
+				salePrice: 575000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2020-01-15',
+				type: 'Purchase',
+				amount: 575000,
+				parties: ['Olivia Astor', 'Murray Hill Properties'],
+				documentNumber: '2020-00345',
+			},
+			{
+				date: '2018-09-10',
+				type: 'Refinance',
+				amount: 450000,
+				parties: ['TD Bank'],
+				documentNumber: '2018-05678',
+			},
+			{
+				date: '2017-05-20',
+				type: 'Purchase',
+				amount: 495000,
+				parties: ['Murray Hill Properties', '39th Street LLC'],
+				documentNumber: '2017-02345',
+			},
+		],
 	},
 	{
 		id: '209-E-10th-St,-Apt-15,-New-York,-NY-10003',
@@ -279,6 +607,46 @@ export const mockProperties = [
 		},
 		image:
 			'https://as1.ftcdn.net/jpg/00/02/71/14/1000_F_2711410_YHetum9OPvnph4xKLMNOPvIJyMjkcV.jpg',
+		ownershipHistory: [
+			{
+				owner: 'Richard Kensington',
+				startDate: '2018-07-30',
+				endDate: null,
+				purchasePrice: 950000,
+				source: 'County Records',
+			},
+			{
+				owner: 'East Village Associates',
+				startDate: '2015-03-12',
+				endDate: '2018-07-30',
+				purchasePrice: 825000,
+				salePrice: 950000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2018-07-30',
+				type: 'Purchase',
+				amount: 950000,
+				parties: ['Richard Kensington', 'East Village Associates'],
+				documentNumber: '2018-04567',
+			},
+			{
+				date: '2016-11-15',
+				type: 'Home Equity Line',
+				amount: 150000,
+				parties: ['Bank of New York'],
+				documentNumber: '2016-07890',
+			},
+			{
+				date: '2015-03-12',
+				type: 'Purchase',
+				amount: 825000,
+				parties: ['East Village Associates', '10th Street LLC'],
+				documentNumber: '2015-01234',
+			},
+		],
 	},
 	{
 		id: '302-W-76th-St,-Apt-5B,-New-York,-NY-10023',
@@ -311,5 +679,45 @@ export const mockProperties = [
 			email: 'alex.rothschild@rothcapital.com',
 		},
 		image: 'https://thumbs.dreamstime.com/b/adobe-house-desert-27277269.jpg',
+		ownershipHistory: [
+			{
+				owner: 'Alexander Rothschild',
+				startDate: '2015-11-25',
+				endDate: null,
+				purchasePrice: 7200000,
+				source: 'County Records',
+			},
+			{
+				owner: 'West Side Commercial Group',
+				startDate: '2010-08-12',
+				endDate: '2015-11-25',
+				purchasePrice: 5800000,
+				salePrice: 7200000,
+				source: 'County Records',
+			},
+		],
+		transactions: [
+			{
+				date: '2015-11-25',
+				type: 'Purchase',
+				amount: 7200000,
+				parties: ['Alexander Rothschild', 'West Side Commercial Group'],
+				documentNumber: '2015-07890',
+			},
+			{
+				date: '2013-04-18',
+				type: 'Commercial Loan',
+				amount: 6500000,
+				parties: ['JPMorgan Chase'],
+				documentNumber: '2013-03456',
+			},
+			{
+				date: '2010-08-12',
+				type: 'Purchase',
+				amount: 5800000,
+				parties: ['West Side Commercial Group', '76th Street Holdings'],
+				documentNumber: '2010-05678',
+			},
+		],
 	},
 ];
