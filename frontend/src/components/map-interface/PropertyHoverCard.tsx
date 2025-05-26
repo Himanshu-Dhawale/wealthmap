@@ -4,7 +4,7 @@ import { Home } from "lucide-react";
 
 interface PropertyHoverCardProps {
   property: Property | null;
-  position: { top: number; left: number };
+  position: { top: number; left: number } | null;
   visible: boolean;
 }
 
@@ -18,8 +18,8 @@ export const PropertyHoverCard = ({
     <div
       className="absolute z-50 w-64 bg-white rounded-lg shadow-xl border border-gray-200 transition-all duration-200"
       style={{
-        top: `${position.top}px`,
-        left: `${position.left}px`,
+        top: `${position?.top}px`,
+        left: `${position?.left}px`,
         transform: "translate(-100%, -100%)",
       }}
     >
@@ -29,8 +29,10 @@ export const PropertyHoverCard = ({
           {property.image ? (
             <Image
               src={property.image}
-              alt={property.title}
+              alt={property.addressLine1}
               className="w-full h-full object-cover"
+              width={100}
+              height={100}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -40,9 +42,9 @@ export const PropertyHoverCard = ({
         </div>
         {/* Property Details */}
         <div className="p-3">
-          <h3 className="font-medium text-sm truncate">{property.title}</h3>
+          <h3 className="font-medium text-sm truncate">{property.addressLine1}</h3>
           <p className="text-xs text-gray-500 mt-1 truncate">
-            {property.address}
+            {property.formattedAddress}
           </p>
           <div className="flex justify-between mt-2 text-xs">
             <div>
@@ -53,7 +55,7 @@ export const PropertyHoverCard = ({
             </div>
             <div>
               <span className="text-gray-500">Size:</span>
-              <span className="ml-1 font-medium">{property.area} sqft</span>
+              <span className="ml-1 font-medium">{property.squareFootage} sqft</span>
             </div>
           </div>
         </div>
