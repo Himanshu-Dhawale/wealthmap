@@ -7,6 +7,7 @@ import { LoginFormData } from "@/types/types";
 import { loginSchema } from "@/schema/loginSchema";
 import { loggingInUser } from "../../lib/utils";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const {
@@ -19,8 +20,11 @@ const LoginPage = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loggingInUser({ ...data, redirect: false });
-      if (response?.status !== 401) return router.push("/map");
-      console.log(response?.error);
+      if (response?.status !== 401) {
+        toast.success('Loggedin Successfully!')
+        return router.push("/map");
+      }
+      toast.error(response?.error ?? "Something Went Wrong");
     } catch (err) {
       console.error(err);
     }
