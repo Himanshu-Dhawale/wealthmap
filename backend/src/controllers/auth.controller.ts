@@ -122,8 +122,14 @@ export async function login(c: Context) {
 				passwordHash: true,
 				role: true,
 				companyId: true,
+				isActive: true,
+				status: true,
 			},
 		});
+
+		if (!user?.isActive || user.status === 'REVOKED') {
+			return c.json({ message: 'Account is deactivated' }, 401);
+		}
 
 		if (!user || (await hashPassword(password)) !== user.passwordHash) {
 			return c.json({ message: 'Invalid credentials' }, 401);
