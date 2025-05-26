@@ -1,29 +1,10 @@
 "use client";
 import { useMapStore } from "@/stores/mapStore";
-import { Badge } from "@/components/ui/badge";
-import {
-  MapPin,
-  MoveRight,
-  Home,
-  Building,
-  LandPlot,
-  IndianRupee,
-} from "lucide-react";
-import { PropertyType } from "@/types/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MoveRight, Home, History, Info, Bookmark } from "lucide-react";
 import Image from "next/image";
-
-const getPropertyTypeIcon = (type: PropertyType) => {
-  switch (type) {
-    case "residential":
-      return <Home className="w-4 h-4" />;
-    case "commercial":
-      return <Building className="w-4 h-4" />;
-    case "other":
-      return <LandPlot className="w-4 h-4" />;
-    default:
-      return <Home className="w-4 h-4" />;
-  }
-};
+import { PropertyDetails } from "./PropertyDetails";
+import { HistoryAndTransactions } from "./HistoryAndTransactions";
 
 const SelectedPropertyCard = () => {
   const { selectedProperty, setSelectedProperty } = useMapStore();
@@ -39,6 +20,7 @@ const SelectedPropertyCard = () => {
               alt={selectedProperty.addressLine1}
               className="absolute object-cover"
               fill
+              priority
             />
           </div>
         ) : (
@@ -46,57 +28,41 @@ const SelectedPropertyCard = () => {
             <Home className="w-12 h-12 text-gray-400" />
           </div>
         )}
+        <button className="absolute p-2 transition-colors rounded-full top-2 right-12 bg-white/80 hover:bg-white">
+          <Bookmark size={16} />
+        </button>
         <button
           onClick={() => setSelectedProperty(null)}
           className="absolute p-2 transition-colors rounded-full top-2 right-2 bg-white/80 hover:bg-white"
         >
-          <MoveRight className="w-4 h-4" />
+          <MoveRight size={14} />
         </button>
       </div>
 
-      <div className="p-4">
-        <div className="flex items-start justify-between">
-          <h2 className="text-xl font-bold">{selectedProperty.addressLine1}</h2>
-          <Badge variant="outline" className="flex items-center gap-1">
-            {getPropertyTypeIcon(selectedProperty.propertyType)}
-            <span className="capitalize">{selectedProperty.propertyType}</span>
-          </Badge>
-        </div>
+      <Tabs defaultValue="details" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="details" className="flex items-center gap-1">
+            <Info className="w-4 h-4" /> Details
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center gap-1">
+            <History className="w-4 h-4" /> History
+          </TabsTrigger>
+        </TabsList>
 
-        <div className="flex items-center mt-1 text-sm text-gray-600">
-          <MapPin className="w-4 h-4 mr-1" />
-          <span>{selectedProperty.formattedAddress}</span>
-        </div>
+        <TabsContent
+          value="details"
+          className="p-4 max-h-64 overflow-y-auto scrollbar-thin"
+        >
+          <PropertyDetails selectedProperty={selectedProperty} />
+        </TabsContent>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <p className="text-sm text-gray-500">Price</p>
-            <p className="flex items-center text-lg font-semibold">
-              <IndianRupee className="w-4 h-4 mr-1" />
-              {selectedProperty.price.toLocaleString("en-IN")}
-            </p>
-          </div>
-
-          {!!selectedProperty.squareFootage && (
-            <div>
-              <p className="text-sm text-gray-500">Area</p>
-              <p className="text-lg font-semibold">
-                {selectedProperty.squareFootage} sq.ft
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="pt-4 mt-4 border-t border-gray-200">
-          <p className="text-sm text-gray-500">Owner</p>
-          <p className="font-medium">{selectedProperty.owner.names[0]}</p>
-          {selectedProperty.netWorth && (
-            <p className="text-sm text-gray-600">
-              Net worth: ₹{selectedProperty.netWorth.toLocaleString("en-IN")}
-            </p>
-          )}
-        </div>
-      </div>
+        <TabsContent
+          value="history"
+          className="p-4 max-h-64  overflow-y-auto scrollbar-thin"
+        >
+          <HistoryAndTransactions selectedProperty={selectedProperty} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
