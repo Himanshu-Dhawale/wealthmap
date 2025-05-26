@@ -1,0 +1,1 @@
+export const GET_OWNER = '/search/owner?query='
