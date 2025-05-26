@@ -1,14 +1,15 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OnboardingFormData } from "@/types/types";
 import { onboardingSchema } from "@/schema/onboardingSchema";
-import { postReq } from "../../../../lib/axios-helpers/apiClient";
-import { EMPLOYEE_SIGNUP } from "../../../../endpoints/employee.endpoint";
+import { postReq } from "../../../lib/axios-helpers/apiClient";
+import { EMPLOYEE_SIGNUP } from "../../../endpoints/employee.endpoint";
 import { useMembersStore } from "@/stores/membersStore";
+import OnboardingTutorial from "@/components/OnboardingTutorial";
 
 const AcceptPageContent = () => {
   const {
@@ -20,6 +21,8 @@ const AcceptPageContent = () => {
   const searchParams = useSearchParams();
   const invitationId = searchParams.get("token");
   const { acceptInvitaion } = useMembersStore();
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
 
   const onSubmit = async (data: OnboardingFormData) => {
     const payload = { ...data, invitationId };
@@ -28,12 +31,19 @@ const AcceptPageContent = () => {
       if (response.status === 200 || response.status === 201) {
         const email = response?.data.email;
         acceptInvitaion(email, `${data.firstName} ${data.lastName}`);
-        router.push("/map");
+        setOnboardingComplete(true);
+        setShowTutorial(true);
       }
     } catch (err) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    if (onboardingComplete && !showTutorial) {
+      router.push("/map");
+    }
+  }, [onboardingComplete, showTutorial, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100">
@@ -187,6 +197,10 @@ const AcceptPageContent = () => {
           <p>© {new Date().getFullYear()} WealthMap. All rights reserved.</p>
         </motion.div>
       </motion.div>
+
+      {showTutorial && (
+        <OnboardingTutorial onComplete={() => setShowTutorial(false)} />
+      )}
     </div>
   );
 };
