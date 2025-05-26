@@ -24,7 +24,7 @@ const LoginPage = () => {
         toast.success('Loggedin Successfully!')
         return router.push("/map");
       }
-      toast.error(response?.error ?? "Something Went Wrong");
+      return toast.error(response?.error ?? "Something Went Wrong");
     } catch (err) {
       console.error(err);
     }
