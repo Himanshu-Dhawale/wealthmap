@@ -28,6 +28,14 @@ export const loggingInUser = async (payload: SignInPayload) => {
   return await signIn("credentials", payload);
 };
 
+export const formatUSD = (amount: number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+};
+
 const hexCharacters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F",];
 const getCharacter = (index: number) => {
   return hexCharacters[index];

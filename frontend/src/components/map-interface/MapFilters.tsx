@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
+import { cn, formatUSD } from "@/lib/utils";
 
 const MapFilters = () => {
   const {
@@ -26,7 +26,6 @@ const MapFilters = () => {
     mapStyle,
     toggleMapStyle,
   } = useMapStore();
-
   const [isOpen, setIsOpen] = useState(false);
   const [priceRangeLocal, setPriceRangeLocal] = useState(priceRange);
 
@@ -60,7 +59,6 @@ const MapFilters = () => {
         <Filter className="w-4 h-4" />
         Filters
       </Button>
-
       {/* Filters Panel */}
       {isOpen && (
         <div className="absolute top-0 left-0 bg-white rounded-lg shadow-xl border border-gray-200 w-72 z-50">
@@ -77,7 +75,6 @@ const MapFilters = () => {
 
           {/* Panel Content */}
           <div className="p-4 space-y-5">
-            {/* Search Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Search
@@ -89,7 +86,6 @@ const MapFilters = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-
             {/* Map Style Toggle */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -114,28 +110,26 @@ const MapFilters = () => {
                 </Button>
               </div>
             </div>
-
             {/* Price Range */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Price: ₹{priceRangeLocal[0].toLocaleString("en-IN")} - ₹
-                {priceRangeLocal[1].toLocaleString("en-IN")}
+                Price Range: {formatUSD(priceRangeLocal[0])} -{" "}
+                {formatUSD(priceRangeLocal[1])}
               </label>
               <Slider
                 min={0}
-                max={100000000}
-                step={1000000}
+                max={10000000}
+                step={1000}
                 value={priceRangeLocal}
                 onValueChange={(value) =>
                   setPriceRangeLocal(value as [number, number])
                 }
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>₹0</span>
-                <span>₹10Cr</span>
+                <span>{formatUSD(0)}</span>
+                <span>{formatUSD(10000000)}</span>
               </div>
             </div>
-
             {/* Property Type - Improved Design */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -173,13 +167,13 @@ const MapFilters = () => {
                   Com
                 </Button>
                 <Button
-                  variant={propertyType === "land" ? "default" : "outline"}
-                  onClick={() => setPropertyType("land")}
+                  variant={propertyType === "other" ? "default" : "outline"}
+                  onClick={() => setPropertyType("other")}
                   size="sm"
                   className="h-8 "
                 >
                   <LandPlot className="w-3.5 h-3.5 mr-1" />
-                  Land
+                  Other
                 </Button>
               </div>
             </div>
@@ -189,5 +183,4 @@ const MapFilters = () => {
     </>
   );
 };
-
 export default MapFilters;
