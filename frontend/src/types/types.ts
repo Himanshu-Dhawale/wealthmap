@@ -175,3 +175,12 @@ export interface Report {
   date: string;
   status: "New" | "Reviewed";
 }
+
+export type WealthAnalysisResult = {
+  name: string;
+  email: string;
+  totalNetWorth: number;
+  confidenceLevel: "low" | "medium" | "high";
+  wealthSource: string;
+  lastUpdated: string;
+};
