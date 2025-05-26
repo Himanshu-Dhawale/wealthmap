@@ -70,6 +70,9 @@
 .spinner {
   animation: spin 2s linear infinite;
 }
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
 
 @layer base {
   * {
