@@ -3,9 +3,8 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
 import { useMapStore } from "@/stores/mapStore";
-import { propertiesData } from "@/data/proerties";
-import { Home, Building, TreeDeciduous } from "lucide-react";
 import ReactDOMServer from "react-dom/server";
+import { MapPin } from "lucide-react";
 import { Property } from "@/types/types";
 import { PropertyHoverCard } from "./PropertyHoverCard";
 
@@ -14,17 +13,24 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!;
 const PropertyMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const { filteredProperties, setSelectedProperty, mapStyle, setProperties } =
-    useMapStore();
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const {
+    filteredProperties,
+    setSelectedProperty,
+    mapStyle,
+    fetchProperties,
+    setPropertyType,
+    propertyType,
+  } = useMapStore();
+  const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const [hoveredProperty, setHoveredProperty] = useState<Property | null>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [popupPosition, setPopupPosition] = useState<{
+    top: number;
+    left: number;
+  } | null>({ top: 0, left: 0 });
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   useEffect(() => {
     if (!mapContainer.current) return;
-
     // Check if the map container is empty, or the map was removed due to unmount
     const mapContainerExists =
       mapContainer.current.querySelector(".mapboxgl-canvas");
@@ -34,7 +40,6 @@ const PropertyMap = () => {
         mapRef.current.remove();
         mapRef.current = null;
       }
-
       mapRef.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: `mapbox://styles/mapbox/${
@@ -56,9 +61,10 @@ const PropertyMap = () => {
           trackUserLocation: true,
         })
       );
+      setPropertyType("all");
       mapRef.current.on("load", () => {
         setIsMapLoaded(true);
-        setProperties(propertiesData);
+        fetchProperties();
       });
     }
     return () => {
@@ -82,23 +88,16 @@ const PropertyMap = () => {
   // Add/update markers when filtered properties change
   useEffect(() => {
     if (!mapRef.current || !isMapLoaded) return;
-    // Remove existing markers
+    // Clear existing markers
     document.querySelectorAll(".mapboxgl-marker").forEach((el) => el.remove());
-    // Create a bounds object to fit the map to markers
+    // Add new markers and collect coordinates
     const bounds = new mapboxgl.LngLatBounds();
+    const commercialCoordinates: [number, number][] = [];
+
     filteredProperties.forEach((property) => {
       const markerElement = document.createElement("div");
       markerElement.className = `property-marker w-6 h-6 rounded-full text-white text-xs bg-red-500 cursor-pointer flex items-center justify-center`;
-
-      let iconElement;
-      if (property.type === "residential") {
-        iconElement = <Home size={14} />;
-      } else if (property.type === "commercial") {
-        iconElement = <Building size={14} />;
-      } else {
-        iconElement = <TreeDeciduous size={14} />;
-      }
-      // Render the React element to a string
+      const iconElement = <MapPin size={14} />;
       const iconString = ReactDOMServer.renderToString(iconElement);
       markerElement.innerHTML = iconString;
 
@@ -109,7 +108,6 @@ const PropertyMap = () => {
         }
         setIsHovered(true);
         setHoveredProperty(property);
-
         const markerRect = markerElement.getBoundingClientRect();
         setPopupPosition({
           top: markerRect.top + window.scrollY,
@@ -134,7 +132,7 @@ const PropertyMap = () => {
         }
         setSelectedProperty(property);
         mapRef.current?.flyTo({
-          center: [property.lng, property.lat],
+          center: [property.longitude, property.latitude],
           zoom: 14,
           essential: true,
         });
@@ -146,12 +144,15 @@ const PropertyMap = () => {
 
       if (mapRef.current) {
         new mapboxgl.Marker({ element: markerElement })
-          .setLngLat([property.lng, property.lat])
+          .setLngLat([property.longitude, property.latitude])
           .addTo(mapRef.current);
       }
-      // Extend the bounds to include this marker
-      bounds.extend([property.lng, property.lat]);
+      bounds.extend([property.longitude, property.latitude]);
 
+      // Collect commercial property coordinates
+      if (property.propertyType === "commercial") {
+        commercialCoordinates.push([property.longitude, property.latitude]);
+      }
       return () => {
         markerElement.removeEventListener("mouseenter", handleMouseEnter);
         markerElement.removeEventListener("mouseleave", handleMouseLeave);
@@ -162,14 +163,49 @@ const PropertyMap = () => {
       };
     });
 
-    // Fit the map to the bounds of all markers if there are any
-    if (filteredProperties.length > 0) {
+    if (
+      propertyType === "all" ||
+      (propertyType === "commercial" && commercialCoordinates.length === 0)
+    ) {
+      mapRef.current.flyTo({
+        center: [-74.006, 40.7128],
+        zoom: 11,
+        essential: true,
+      });
+    } else if (
+      propertyType === "commercial" &&
+      commercialCoordinates.length > 0
+    ) {
+      // Fly to nearest commercial property
+      const currentCenter = mapRef.current.getCenter();
+      let nearestCoord = commercialCoordinates[0];
+      let minDistance = Infinity;
+
+      // Find nearest commercial property to current view
+      commercialCoordinates.forEach((coord) => {
+        const distance = Math.sqrt(
+          Math.pow(coord[0] - currentCenter.lng, 2) +
+            Math.pow(coord[1] - currentCenter.lat, 2)
+        );
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearestCoord = coord;
+        }
+      });
+
+      mapRef.current.flyTo({
+        center: nearestCoord,
+        zoom: 12,
+        essential: true,
+      });
+    } else if (filteredProperties.length > 0) {
+      // Default behavior for other filters
       mapRef.current.fitBounds(bounds, {
         padding: 100,
         maxZoom: 14,
       });
     }
-  }, [filteredProperties, isMapLoaded, setSelectedProperty, mapRef]);
+  }, [filteredProperties, isMapLoaded, propertyType]);
 
   return (
     <>
