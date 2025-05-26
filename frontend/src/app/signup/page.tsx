@@ -14,6 +14,7 @@ import { SIGNUP } from "../../endpoints/auth.endpoint";
 import { fileToBase64, loggingInUser } from "../../lib/utils";
 import { SignInPayload } from "../../types/auth/login";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const SignupForm = () => {
   const [step, setStep] = useState(1);
@@ -53,8 +54,11 @@ const SignupForm = () => {
         };
         try {
           const response = await loggingInUser(userPayload);
-          if (response?.status !== 401) return router.push("/map");
-          console.log(response?.error);
+          if (response?.status !== 401) {
+            toast.success("Logging you in...");
+            return router.push("/map");
+          }
+          return toast.error(response?.error ?? 'Something went wrong');
         } catch (err) {
           console.error(err, "Something went wrong, please login...");
         }

@@ -55,9 +55,6 @@ export const NEXT_AUTH: AuthOptions = {
         } catch (err) {
           if (isAxiosError(err)) {
             const errorMessage = err.response?.data?.message || 'Authentication failed';
-            if (err.response?.status === 401) {
-              throw new Error('Invalid credentials');
-            }
             throw new Error(errorMessage);
           }
           throw new Error('An unexpected error occurred');

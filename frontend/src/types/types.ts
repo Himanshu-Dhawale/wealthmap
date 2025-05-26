@@ -47,7 +47,6 @@ export type Property = {
   // Add more fields as needed
 };
 
-
 export type MapState = {
   selectedProperty: Property | null;
   setSelectedProperty: (p: Property | null) => void;
@@ -69,7 +68,7 @@ export type MapState = {
 export enum Status {
   ACTIVE = "active",
   PENDING = "pending",
-  INACIVE = "inactive"
+  INACIVE = "inactive",
 }
 
 // member types
@@ -81,8 +80,6 @@ export type Member = {
   status: Status;
   joinedAt: Date;
   lastActive?: string;
-  permissions?: string[];
-  dataAccess?: string[];
 };
 
 export type MembersState = {
@@ -90,11 +87,36 @@ export type MembersState = {
   fetchMembers: () => Promise<void>;
   addMember: (member: Omit<Member, "id" | "joinedAt" | "status">) => void;
   updateMember: (id: string, updates: Partial<Member>) => void;
-  removeMember: (id: string) => void;
+  removeMember: (id: string) => Promise<void>;
   inviteMember: (email: string, role: "admin" | "member") => Promise<void>;
   acceptInvitaion: (invitationId: string | null, name: string) => void;
 };
 
+// mfa
+export enum TwoFAStatus {
+  DISABLED = "DISABLED",
+  PENDING_VERIFICATION = "PENDING_VERIFICATION",
+  ENABLED = "ENABLED",
+}
+
+export type User = {
+  id: string;
+  email: string;
+  twoFAStatus: TwoFAStatus;
+  twoFASecret?: string;
+};
+
+export type AuthState = {
+  user: User | null;
+  isLoading: boolean;
+  enable2FA: (
+    id: string,
+    email: string
+  ) => Promise<{ secret: string } | undefined>;
+  verify2FA: (code: string) => Promise<void>;
+  disable2FA: () => void;
+  fetch2FAStatus: () => Promise<void>;
+};
 
 export interface Report {
   id: string;
@@ -103,4 +125,3 @@ export interface Report {
   date: string;
   status: "New" | "Reviewed";
 }
-
