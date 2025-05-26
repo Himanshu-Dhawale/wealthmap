@@ -30,23 +30,58 @@ export type OnboardingFormData = z.infer<typeof onboardingSchema>;
 
 export type PropertyType = "residential" | "commercial" | "other" | "all";
 
+export type MailingAddress = {
+  addressLine1: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};
+
+export type OwnerDetails = {
+  names: string[];
+  type: "Individual" | "Company" | "Trust";
+  mailingAddress: MailingAddress;
+  email?: string;
+};
+
+export type OwnershipHistoryEntry = {
+  owner: string;
+  startDate: string;
+  endDate: string | null;
+  purchasePrice?: number;
+  salePrice?: number;
+  source: string;
+};
+
+export type Transaction = {
+  date: string;
+  type: "Purchase" | "Sale" | "Refinance" | "Transfer";
+  amount: number;
+  parties: string[];
+  documentNumber: string;
+};
+
 export type Property = {
   id: string;
+  formattedAddress: string;
   addressLine1: string;
+  addressLine2: string | null;
+  city: string;
+  state: string;
+  zipCode: string;
+  county: string;
   latitude: number;
   longitude: number;
-  price: number;
-  squareFootage: number;
-  formattedAddress: string;
   propertyType: PropertyType;
-  owner: {
-    names:string[]
-  };
-  netWorth?: number;
-  lastSoldPrice?: number;
+  price: number;
+  networth: number;
+  lastSoldPrice: number;
+  owner: OwnerDetails;
+  image: string;
+  ownershipHistory: OwnershipHistoryEntry[];
+  transactions: Transaction[];
+  squareFootage?: number;
   yearBuilt?: number;
-  image?: string;
-  // Add more fields as needed
 };
 
 export type MapState = {
