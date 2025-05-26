@@ -1,14 +1,33 @@
 "use client";
 import { useMapStore } from "@/stores/mapStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MoveRight, Home, History, Info, Bookmark } from "lucide-react";
+import {
+  MoveRight,
+  Home,
+  History,
+  Info,
+  Bookmark,
+  BookmarkCheck,
+  LoaderCircle,
+} from "lucide-react";
 import Image from "next/image";
 import { PropertyDetails } from "./PropertyDetails";
 import { HistoryAndTransactions } from "./HistoryAndTransactions";
 
 const SelectedPropertyCard = () => {
-  const { selectedProperty, setSelectedProperty } = useMapStore();
+  const {
+    selectedProperty,
+    setSelectedProperty,
+    toggleBookmark,
+    isBookmarking,
+    bookmarks,
+  } = useMapStore();
   if (!selectedProperty) return null;
+
+  const existingBookmark = bookmarks?.find(
+    (b) => b.propertyId === selectedProperty.id
+  );
+  const isBookmarked = !!existingBookmark;
 
   return (
     <div className="fixed z-40 w-full max-w-sm overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl bottom-4 right-4 md:right-8">
@@ -28,8 +47,25 @@ const SelectedPropertyCard = () => {
             <Home className="w-12 h-12 text-gray-400" />
           </div>
         )}
-        <button className="absolute p-2 transition-colors rounded-full top-2 right-12 bg-white/80 hover:bg-white">
-          <Bookmark size={16} />
+        <button
+          onClick={() => toggleBookmark(selectedProperty.id)}
+          disabled={isBookmarking}
+          className="absolute p-2 transition-colors rounded-full top-2 right-12 bg-white/80 hover:bg-white"
+          aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+        >
+          {isBookmarking ? (
+            <LoaderCircle
+              size={16}
+              className="animate-spin text-blue-gradient-start"
+            />
+          ) : isBookmarked ? (
+            <BookmarkCheck
+              size={16}
+              className="text-blue-gradient-start fill-blue-gradient-start"
+            />
+          ) : (
+            <Bookmark size={16} />
+          )}
         </button>
         <button
           onClick={() => setSelectedProperty(null)}
