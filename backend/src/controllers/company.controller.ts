@@ -86,7 +86,6 @@ export async function deactivateEmployee(c: Context) {
 			data: {
 				isActive: false,
 				status: UserStatus.REVOKED,
-				passwordHash: '',
 				mfaSecret: null,
 			},
 		});
