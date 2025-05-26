@@ -1,1 +1,1 @@
-export const GET_OWNER = '/search/owner?query='
+export const GET_OWNER = "/owner/search?query=";
