@@ -24,6 +24,9 @@ export const mockProperties = [
 				zipCode: '02116',
 			},
 			email: 'rkensington@kensingtongroup.com',
+			confidenceLevel: 'high',
+			wealthSource: 'County Records',
+			lastUpdated: '2024-12-01T10:00:00Z',
 		},
 		image:
 			'https://www.usatoday.com/gcdn/-mm-/481602f6d9edcd4edf3b3b8a2ff6d2d98ae8eb24/c=0-0-507-286/local/-/media/USATODAY/USATODAY/2014/04/11//1397233607000-144292803.jpg?width=1200&disable=upscale&format=pjpg&auto=webp',
@@ -96,6 +99,9 @@ export const mockProperties = [
 				zipCode: '10017',
 			},
 			email: 'emily.v@vanderbilt.org',
+			confidenceLevel: 'medium',
+			wealthSource: 'Public Filings',
+			lastUpdated: '2024-11-15T14:30:00Z',
 		},
 		image: 'https://expatnetwork.com/wp-content/uploads/2019/01/dreamstime_xl_american-home.jpg',
 		ownershipHistory: [
@@ -172,6 +178,9 @@ export const mockProperties = [
 				zipCode: '02116',
 			},
 			email: 'rkensington@kensingtongroup.com',
+			confidenceLevel: 'high',
+			wealthSource: 'County Records',
+			lastUpdated: '2024-12-05T09:15:00Z',
 		},
 		image:
 			'https://www.zillowstatic.com/bedrock/app/uploads/sites/47/GA_ATL_DOWNTOWN_82792_078-RT_RT_cropRT-5f9e47-1440x960.jpg',
@@ -246,6 +255,9 @@ export const mockProperties = [
 				zipCode: '10023',
 			},
 			email: 'alex.rothschild@rothcapital.com',
+			confidenceLevel: 'high',
+			wealthSource: 'Public Filings',
+			lastUpdated: '2024-11-28T16:45:00Z',
 		},
 		image:
 			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeQRjITVvK6zEhqwWUuMHPfVKpxWNGFsVQPw&s',
@@ -318,6 +330,9 @@ export const mockProperties = [
 				zipCode: '10165',
 			},
 			email: 'olivia.astor@astorholdings.com',
+			confidenceLevel: 'medium',
+			wealthSource: 'County Records',
+			lastUpdated: '2024-11-20T11:20:00Z',
 		},
 		image:
 			'https://www.ptireturns.com/blog/wp-content/uploads/2023/12/Rent-US-property-from-overseas.jpg',
@@ -390,6 +405,9 @@ export const mockProperties = [
 				zipCode: '10023',
 			},
 			email: 'alex.rothschild@rothcapital.com',
+			confidenceLevel: 'high',
+			wealthSource: 'Public Filings',
+			lastUpdated: '2024-12-02T13:10:00Z',
 		},
 		image: 'https://www.naproperties.com/wp-content/uploads/HomeHero.jpg',
 		ownershipHistory: [
@@ -460,6 +478,9 @@ export const mockProperties = [
 				zipCode: '10017',
 			},
 			email: 'nwhitmore@whitmorerealty.com',
+			confidenceLevel: 'medium',
+			wealthSource: 'County Records',
+			lastUpdated: '2024-11-18T09:45:00Z',
 		},
 		image:
 			'https://img.probuilder.com/files/base/ebm/probuilder/image/2024/10/66fdc5bade5fd1b0025497a7-mansion.png?auto=format,compress&fit=fill&fill=blur&q=45&w=640&width=640',
@@ -532,6 +553,9 @@ export const mockProperties = [
 				zipCode: '10165',
 			},
 			email: 'olivia.astor@astorholdings.com',
+			confidenceLevel: 'low',
+			wealthSource: 'Public Filings',
+			lastUpdated: '2024-11-10T08:30:00Z',
 		},
 		image:
 			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0-68zGELcCKlx5mTmAnn4RaFpGzRfeiEe74jJANFqvyugcm1GzAqa-6xSz0Bz9KssZFE&usqp=CAU',
@@ -604,6 +628,9 @@ export const mockProperties = [
 				zipCode: '02116',
 			},
 			email: 'rkensington@kensingtongroup.com',
+			confidenceLevel: 'high',
+			wealthSource: 'County Records',
+			lastUpdated: '2024-12-03T15:20:00Z',
 		},
 		image:
 			'https://as1.ftcdn.net/jpg/00/02/71/14/1000_F_2711410_YHetum9OPvnph4xKLMNOPvIJyMjkcV.jpg',
@@ -677,6 +704,9 @@ export const mockProperties = [
 				zipCode: '10023',
 			},
 			email: 'alex.rothschild@rothcapital.com',
+			confidenceLevel: 'high',
+			wealthSource: 'Public Filings',
+			lastUpdated: '2024-11-25T10:50:00Z',
 		},
 		image: 'https://thumbs.dreamstime.com/b/adobe-house-desert-27277269.jpg',
 		ownershipHistory: [
