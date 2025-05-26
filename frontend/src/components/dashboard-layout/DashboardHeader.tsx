@@ -1,6 +1,6 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
-import { Bell, Bookmark } from "lucide-react";
+import { Bookmark } from "lucide-react";
 import { generateRandomColor } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
