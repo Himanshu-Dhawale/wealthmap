@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
   SelectContent,
@@ -17,14 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 
 const propertyTypeOptions = [
   { id: "LUXURY_HOME", label: "Luxury Home" },
@@ -71,15 +62,7 @@ const CreateReportForm = () => {
 
   const onSubmit = async (data: ReportFormInput) => {
     try {
-      const formattedData: ReportFormData = {
-        ...data,
-        estimatedNetWorth: parseFloat(
-          data.estimatedNetWorth.replace(/[$,]/g, "")
-        ),
-      };
-
-      console.log("Report data:", formattedData);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log(data)
 
       reset();
     } catch (err) {
@@ -350,41 +333,12 @@ const CreateReportForm = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 1.0 }}
           >
-            <Label>Last Contact Date</Label>
-            <Controller
-              name="lastContactDate"
-              control={control}
-              render={({ field }) => (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                        errors.lastContactDate ? "border-red-500" : ""
-                      )}
-                    >
-                      <CalendarIcon className="w-4 h-4 mr-2" />
-                      {field.value ? (
-                        format(new Date(field.value), "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) =>
-                        field.onChange(date?.toISOString().split("T")[0])
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              )}
+            <Label htmlFor="lastContactDate">Last Contact Date</Label>
+            <Input
+              id="lastContactDate"
+              type="date"
+              {...register("lastContactDate")}
+              className={errors.lastContactDate ? "border-red-500" : ""}
             />
             {errors.lastContactDate && (
               <p className="mt-1 text-sm text-red-600">
