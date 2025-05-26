@@ -84,13 +84,23 @@ export type Property = {
   yearBuilt?: number;
 };
 
+export type BookMark = {
+  id: string;
+  bookmarkedAt: string;
+  propertyId: string;
+  property: Property;
+};
+
 export type MapState = {
+  bookmarks: BookMark[];
+  isBookmarking: boolean;
   selectedProperty: Property | null;
   setSelectedProperty: (p: Property | null) => void;
   properties: Property[];
-  // setProperties: (props: Property[]) => void;
   filteredProperties: Property[];
   mapStyle: "streets" | "satellite";
+  showBookmarks: boolean;
+  toggleShowBookmarks: () => void;
   toggleMapStyle: () => void;
   priceRange: [number, number];
   setPriceRange: (range: [number, number]) => void;
@@ -101,6 +111,8 @@ export type MapState = {
   filterProperties: () => void;
   isLoading: boolean;
   fetchProperties: () => Promise<void>;
+  fetchBookmarks: () => Promise<void>;
+  toggleBookmark: (propertyId: string) => Promise<void>;
 };
 
 export enum Status {
