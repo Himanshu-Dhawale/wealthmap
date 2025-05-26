@@ -28,18 +28,20 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;
 
-export type PropertyType = "residential" | "commercial" | "land" | "all";
+export type PropertyType = "residential" | "commercial" | "other" | "all";
 
 export type Property = {
   id: string;
-  title: string;
-  lat: number;
-  lng: number;
+  addressLine1: string;
+  latitude: number;
+  longitude: number;
   price: number;
-  area: number;
-  address: string;
-  type: PropertyType;
-  owner: string;
+  squareFootage: number;
+  formattedAddress: string;
+  propertyType: PropertyType;
+  owner: {
+    names:string[]
+  };
   netWorth?: number;
   lastSoldPrice?: number;
   yearBuilt?: number;
@@ -51,7 +53,7 @@ export type MapState = {
   selectedProperty: Property | null;
   setSelectedProperty: (p: Property | null) => void;
   properties: Property[];
-  setProperties: (props: Property[]) => void;
+  // setProperties: (props: Property[]) => void;
   filteredProperties: Property[];
   mapStyle: "streets" | "satellite";
   toggleMapStyle: () => void;
@@ -63,6 +65,7 @@ export type MapState = {
   setSearchQuery: (query: string) => void;
   filterProperties: () => void;
   isLoading: boolean;
+  fetchProperties: () => Promise<void>;
 };
 
 export enum Status {
