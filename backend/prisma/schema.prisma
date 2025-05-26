@@ -23,21 +23,23 @@ model Company {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
+  id            String     @id @default(uuid())
+  email         String     @unique
   passwordHash  String
   role          Role
-  isActive      Boolean  @default(true)
-  mfaEnabled    Boolean  @default(false)
-	mfaSecret     String?
-  acceptedTerms Boolean  @default(false)
-	status        UserStatus @default(ACCEPTED)
+  isActive      Boolean    @default(true)
+  mfaEnabled    Boolean    @default(false)
+  mfaSecret     String?
+  acceptedTerms Boolean    @default(false)
+  status        UserStatus @default(ACCEPTED)
   companyId     String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   firstName     String?
   lastName      String?
-  company       Company  @relation(fields: [companyId], references: [id])
+  company       Company    @relation(fields: [companyId], references: [id])
+
+  PropertyBookmark PropertyBookmark[]
 }
 
 model Invitation {
@@ -51,32 +53,39 @@ model Invitation {
 }
 
 model Property {
-  id                String   @id @default(uuid())
-  formattedAddress  String
-  addressLine1      String
-  city              String
-  state             String
-  zipCode           String
-  county            String?
-  latitude          Float
-  longitude         Float
-  propertyType      String
-  bedrooms          Int?
-  bathrooms         Int?
-  squareFootage     Int
-  lotSize           Int?
-  yearBuilt         Int?
-  image             String?
-  taxValue          Float?
-  landValue         Float?
-  improvementValue  Float?
-  ownerName         String?
-  ownerType         String?
-  companyId         String
-  company           Company  @relation(fields: [companyId], references: [id])
-  createdAt         DateTime @default(now())
+  id               String   @id @default(uuid())
+  formattedAddress String
+  addressLine1     String
+  city             String
+  state            String
+  zipCode          String
+  county           String?
+  latitude         Float
+  longitude        Float
+  propertyType     String
+  bedrooms         Int?
+  bathrooms        Int?
+  squareFootage    Int
+  lotSize          Int?
+  yearBuilt        Int?
+  image            String?
+  taxValue         Float?
+  landValue        Float?
+  improvementValue Float?
+  ownerName        String?
+  ownerType        String?
+  companyId        String
+  company          Company  @relation(fields: [companyId], references: [id])
+  createdAt        DateTime @default(now())
 }
 
+model PropertyBookmark {
+  id         String   @id @default(uuid())
+  userId     String
+  propertyId String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
 
 enum Role {
   ADMIN
