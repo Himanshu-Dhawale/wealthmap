@@ -50,7 +50,7 @@ export default function WealthAnalysisPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container px-4 py-8 mx-auto">
       <div className="flex flex-col space-y-8">
         <div className="flex flex-col space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">Wealth Analysis</h1>
@@ -80,9 +80,9 @@ export default function WealthAnalysisPage() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
               ) : (
-                <SearchIcon className="mr-2 h-4 w-4" />
+                <SearchIcon className="w-4 h-4 mr-2" />
               )}
               Search
             </Button>
@@ -93,7 +93,7 @@ export default function WealthAnalysisPage() {
           <div className="grid gap-6">
             {results.map((result, index) => (
               <Card key={index} className="shadow-sm">
-                <CardHeader className="border-b pb-4">
+                <CardHeader className="pb-4 border-b">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{result.name}</CardTitle>
                     <Badge
@@ -112,7 +112,7 @@ export default function WealthAnalysisPage() {
                   </p>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                     <div className="space-y-1">
                       <p className="text-sm font-medium text-muted-foreground">
                         Total Net Worth
@@ -151,11 +151,11 @@ export default function WealthAnalysisPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Search className="h-12 w-12 text-muted-foreground mb-4" />
+            <Search className="w-12 h-12 mb-4 text-muted-foreground" />
             <p className="text-lg font-medium text-muted-foreground">
               {isLoading ? "Searching..." : "No results found"}
             </p>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="mt-2 text-sm text-muted-foreground">
               {isLoading
                 ? ""
                 : "Search for an individual to view their wealth analysis"}
