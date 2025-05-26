@@ -1,5 +1,6 @@
 import { loginSchema } from "@/schema/loginSchema";
 import { onboardingSchema } from "@/schema/onboardingSchema";
+import { reportSchema } from "@/schema/reportSchema";
 import { signupSchema } from "@/schema/signupSchema";
 import { ReactElement } from "react";
 import { z } from "zod";
@@ -27,6 +28,7 @@ export interface ISteps {
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;
+export type ReportFormData = z.infer<typeof reportSchema>;
 
 export type PropertyType = "residential" | "commercial" | "other" | "all";
 
