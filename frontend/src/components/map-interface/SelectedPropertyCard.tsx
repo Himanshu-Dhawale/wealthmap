@@ -1,33 +1,33 @@
 "use client";
 import { useMapStore } from "@/stores/mapStore";
-import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  MapPin,
   MoveRight,
   Home,
-  Building,
-  LandPlot,
-  IndianRupee,
+  History,
+  Info,
+  Bookmark,
+  BookmarkCheck,
+  LoaderCircle,
 } from "lucide-react";
-import { PropertyType } from "@/types/types";
 import Image from "next/image";
-
-const getPropertyTypeIcon = (type: PropertyType) => {
-  switch (type) {
-    case "residential":
-      return <Home className="w-4 h-4" />;
-    case "commercial":
-      return <Building className="w-4 h-4" />;
-    case "other":
-      return <LandPlot className="w-4 h-4" />;
-    default:
-      return <Home className="w-4 h-4" />;
-  }
-};
+import { PropertyDetails } from "./PropertyDetails";
+import { HistoryAndTransactions } from "./HistoryAndTransactions";
 
 const SelectedPropertyCard = () => {
-  const { selectedProperty, setSelectedProperty } = useMapStore();
+  const {
+    selectedProperty,
+    setSelectedProperty,
+    toggleBookmark,
+    isBookmarking,
+    bookmarks,
+  } = useMapStore();
   if (!selectedProperty) return null;
+
+  const existingBookmark = bookmarks?.find(
+    (b) => b.propertyId === selectedProperty.id
+  );
+  const isBookmarked = !!existingBookmark;
 
   return (
     <div className="fixed z-40 w-full max-w-sm overflow-hidden bg-white border border-gray-200 rounded-lg shadow-xl bottom-4 right-4 md:right-8">
@@ -39,6 +39,7 @@ const SelectedPropertyCard = () => {
               alt={selectedProperty.addressLine1}
               className="absolute object-cover"
               fill
+              priority
             />
           </div>
         ) : (
@@ -47,56 +48,57 @@ const SelectedPropertyCard = () => {
           </div>
         )}
         <button
+          onClick={() => toggleBookmark(selectedProperty.id)}
+          disabled={isBookmarking}
+          className="absolute p-2 transition-colors rounded-full top-2 right-12 bg-white/80 hover:bg-white"
+          aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+        >
+          {isBookmarking ? (
+            <LoaderCircle
+              size={16}
+              className="animate-spin text-blue-gradient-start"
+            />
+          ) : isBookmarked ? (
+            <BookmarkCheck
+              size={16}
+              className="text-blue-gradient-start fill-blue-gradient-start"
+            />
+          ) : (
+            <Bookmark size={16} />
+          )}
+        </button>
+        <button
           onClick={() => setSelectedProperty(null)}
           className="absolute p-2 transition-colors rounded-full top-2 right-2 bg-white/80 hover:bg-white"
         >
-          <MoveRight className="w-4 h-4" />
+          <MoveRight size={14} />
         </button>
       </div>
 
-      <div className="p-4">
-        <div className="flex items-start justify-between">
-          <h2 className="text-xl font-bold">{selectedProperty.addressLine1}</h2>
-          <Badge variant="outline" className="flex items-center gap-1">
-            {getPropertyTypeIcon(selectedProperty.propertyType)}
-            <span className="capitalize">{selectedProperty.propertyType}</span>
-          </Badge>
-        </div>
+      <Tabs defaultValue="details" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="details" className="flex items-center gap-1">
+            <Info className="w-4 h-4" /> Details
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center gap-1">
+            <History className="w-4 h-4" /> History
+          </TabsTrigger>
+        </TabsList>
 
-        <div className="flex items-center mt-1 text-sm text-gray-600">
-          <MapPin className="w-4 h-4 mr-1" />
-          <span>{selectedProperty.formattedAddress}</span>
-        </div>
+        <TabsContent
+          value="details"
+          className="p-4 max-h-64 overflow-y-auto scrollbar-thin"
+        >
+          <PropertyDetails selectedProperty={selectedProperty} />
+        </TabsContent>
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <p className="text-sm text-gray-500">Price</p>
-            <p className="flex items-center text-lg font-semibold">
-              <IndianRupee className="w-4 h-4 mr-1" />
-              {selectedProperty.price.toLocaleString("en-IN")}
-            </p>
-          </div>
-
-          {!!selectedProperty.squareFootage && (
-            <div>
-              <p className="text-sm text-gray-500">Area</p>
-              <p className="text-lg font-semibold">
-                {selectedProperty.squareFootage} sq.ft
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="pt-4 mt-4 border-t border-gray-200">
-          <p className="text-sm text-gray-500">Owner</p>
-          <p className="font-medium">{selectedProperty.owner.names[0]}</p>
-          {selectedProperty.netWorth && (
-            <p className="text-sm text-gray-600">
-              Net worth: ₹{selectedProperty.netWorth.toLocaleString("en-IN")}
-            </p>
-          )}
-        </div>
-      </div>
+        <TabsContent
+          value="history"
+          className="p-4 max-h-64  overflow-y-auto scrollbar-thin"
+        >
+          <HistoryAndTransactions selectedProperty={selectedProperty} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
