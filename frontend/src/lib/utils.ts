@@ -36,6 +36,17 @@ export const formatUSD = (amount: number) => {
   }).format(amount);
 };
 
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 const hexCharacters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F",];
 const getCharacter = (index: number) => {
   return hexCharacters[index];
