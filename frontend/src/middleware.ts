@@ -12,31 +12,41 @@ export const config = {
 export async function middleware(request:NextRequest) {
   const protectedRoutes: string[] = ['/map', "/members", "/reports", "/wealth-analysis"];
 
+  const employeeRestrictedRoutes: string[] = ['/members'];
+
    const authRoutes: string[] = ['/login', '/register']
    const { pathname } = request.nextUrl
 
    const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   )
+ 
+   const isEmployeeRestrictedRoute = employeeRestrictedRoutes.some   ((route) =>
+    pathname.startsWith(route)
+   )
 
    const isAuthRoute = authRoutes.includes(pathname)
  
    const token = await getToken({
     req: request,
-    secret: process.env.NEXTAUTH_SECRET
+    secret: process.env.NEXTAUTH_SECRET,
   })
-
+ 
     if (isProtectedRoute && !token) {
     const signInUrl = new URL('/login', request.url)
     signInUrl.searchParams.set('callbackUrl', request.nextUrl.href)
     return NextResponse.redirect(signInUrl)
     }
 
-      if (isAuthRoute && token) {
+ 
+      if (token && isEmployeeRestrictedRoute && token.role === 'EMPLOYEE') {
+    return NextResponse.redirect(new URL('/map', request.url))
+     }
+        if (isAuthRoute && token) {
         return NextResponse.redirect(new URL('/map', request.url))
      }
-      
      
      return NextResponse.next()
 
 }
+
