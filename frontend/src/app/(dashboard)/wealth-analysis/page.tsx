@@ -10,27 +10,23 @@ import {
   Search,
   SearchIcon,
 } from "lucide-react";
-import { SearchBar } from "@/components/SearchBar";
 import { getReq } from "@/lib/axios-helpers/apiClient";
 import { WealthAnalysisResult } from "@/types/types";
 import { GET_OWNER } from "@/endpoints/owner.endpoint";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+import { Input } from "@/components/ui/input";
 
 export default function WealthAnalysisPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<WealthAnalysisResult[]>([]);
-  const { data: session } = useSession();
-  const token = session?.user.accessToken;
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     setIsLoading(true);
     try {
       const res = await getReq<WealthAnalysisResult[]>(
-        `${GET_OWNER}${searchQuery}`,
-        { token }
+        `${GET_OWNER}${searchQuery}`
       );
       console.log("res", res.data);
       setResults(res.data);
@@ -65,14 +61,24 @@ export default function WealthAnalysisPage() {
 
         <div className="flex flex-col space-y-4">
           <div className="flex items-center space-x-2">
-            <SearchBar
-              placeholder="Search by name, email, or company"
+            <Input
+              placeholder="    Search by name, email, or company"
               value={searchQuery}
-              onChange={(e: any) => setSearchQuery(e.target.value)}
-              onKeyDown={(e: any) => e.key === "Enter" && handleSearch()}
-              className="flex-1"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchQuery(e.target.value)
+              }
+              onKeyDown={(e: React.KeyboardEvent) => {
+                if (e.key === "Enter" && searchQuery.trim()) {
+                  handleSearch();
+                }
+              }}
+              className="w-full md:w-72"
             />
-            <Button onClick={handleSearch} disabled={isLoading}>
+
+            <Button
+              onClick={() => searchQuery.trim() && handleSearch()}
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
               ) : (
@@ -133,10 +139,12 @@ export default function WealthAnalysisPage() {
                     </div>
                   </div>
 
-                  <Button>
-                    <ChartNoAxesColumn className="mr-2 h-4 w-4" />
-                    Detailed Analysis
-                  </Button>
+                  <div className="mt-6 flex justify-end space-x-2">
+                    <Button>
+                      <ChartNoAxesColumn className="mr-2 h-4 w-4" />
+                      Detailed Analysis
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
