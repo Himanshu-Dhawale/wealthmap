@@ -17,7 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -39,9 +43,15 @@ const wealthSourceOptions = [
   { value: "OTHER", label: "Other" },
 ];
 
-type ReportFormInput = Omit<ReportFormData, 'estimatedNetWorth'> & {
+type ReportFormInput = Omit<ReportFormData, "estimatedNetWorth"> & {
   estimatedNetWorth: string;
 };
+type PropertType =
+  | "LUXURY_HOME"
+  | "COMMERCIAL"
+  | "VACATION"
+  | "INVESTMENT"
+  | "SPECIAL_USE";
 
 const CreateReportForm = () => {
   const {
@@ -63,11 +73,13 @@ const CreateReportForm = () => {
     try {
       const formattedData: ReportFormData = {
         ...data,
-        estimatedNetWorth: parseFloat(data.estimatedNetWorth.replace(/[$,]/g, '')),
+        estimatedNetWorth: parseFloat(
+          data.estimatedNetWorth.replace(/[$,]/g, "")
+        ),
       };
 
       console.log("Report data:", formattedData);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       reset();
     } catch (err) {
@@ -84,7 +96,7 @@ const CreateReportForm = () => {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Information Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -108,7 +120,9 @@ const CreateReportForm = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
           >
-            <Label htmlFor="estimatedNetWorth">Estimated Net Worth (USD)*</Label>
+            <Label htmlFor="estimatedNetWorth">
+              Estimated Net Worth (USD)*
+            </Label>
             <Input
               id="estimatedNetWorth"
               type="text"
@@ -128,7 +142,7 @@ const CreateReportForm = () => {
         </div>
 
         {/* Contact Information Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -171,7 +185,7 @@ const CreateReportForm = () => {
         </div>
 
         {/* Wealth Details Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -203,7 +217,9 @@ const CreateReportForm = () => {
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className={errors.wealthSource ? "border-red-500" : ""}>
+                  <SelectTrigger
+                    className={errors.wealthSource ? "border-red-500" : ""}
+                  >
                     <SelectValue placeholder="Select source" />
                   </SelectTrigger>
                   <SelectContent>
@@ -231,7 +247,7 @@ const CreateReportForm = () => {
           transition={{ duration: 0.4, delay: 0.6 }}
         >
           <Label className="block mb-3">Property Types*</Label>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
             {propertyTypeOptions.map((option) => (
               <div key={option.id} className="flex items-center space-x-2">
                 <Controller
@@ -240,7 +256,9 @@ const CreateReportForm = () => {
                   render={({ field }) => (
                     <Checkbox
                       id={option.id}
-                      checked={field.value?.includes(option.id) || false}
+                      checked={
+                        field.value?.includes(option.id as PropertType) || false
+                      }
                       onCheckedChange={(checked) => {
                         const newValue = checked
                           ? [...(field.value || []), option.id]
@@ -305,7 +323,7 @@ const CreateReportForm = () => {
         </motion.div>
 
         {/* Additional Information Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -347,7 +365,7 @@ const CreateReportForm = () => {
                         errors.lastContactDate ? "border-red-500" : ""
                       )}
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <CalendarIcon className="w-4 h-4 mr-2" />
                       {field.value ? (
                         format(new Date(field.value), "PPP")
                       ) : (
@@ -360,7 +378,7 @@ const CreateReportForm = () => {
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
                       onSelect={(date) =>
-                        field.onChange(date?.toISOString().split('T')[0])
+                        field.onChange(date?.toISOString().split("T")[0])
                       }
                       initialFocus
                     />
@@ -381,25 +399,37 @@ const CreateReportForm = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 1.1 }}
-          className="flex justify-end space-x-4 pt-6"
+          className="flex justify-end pt-6 space-x-4"
         >
-          <Button
-            type="button"
-            variant="outline"
-            className="px-6 py-2"
-          >
+          <Button type="button" variant="outline" className="px-6 py-2">
             Cancel
           </Button>
           <Button
             type="submit"
-            className="px-6 py-2 bg-primary-gradient text-white hover:shadow-lg"
+            className="px-6 py-2 text-white bg-primary-gradient hover:shadow-lg"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <span className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="w-4 h-4 mr-2 -ml-1 text-white animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Submitting...
               </span>
