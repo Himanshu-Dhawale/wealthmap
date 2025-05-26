@@ -26,17 +26,19 @@ export const MobileNav = () => {
     { name: "Members", href: "/members", icon: <Users /> },
     { name: "Settings", href: "/settings", icon: <Settings /> },
   ];
-
+  const homePath = "/";
   return (
     <>
-      <div className="md:hidden fixed bottom-4 left-0 right-0 flex justify-center">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="bg-white shadow-lg rounded-full p-3 border border-gray-200"
-        >
-          <Menu />
-        </button>
-      </div>
+      {pathname !== homePath && (
+        <div className="md:hidden fixed bottom-4 left-0 right-0 flex justify-center">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-white shadow-lg rounded-full p-3 border border-gray-200"
+          >
+            <Menu />
+          </button>
+        </div>
+      )}
 
       {/* Mobile menu */}
       {isOpen && (

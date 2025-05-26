@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import { Button } from "./ui/button";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { status } = useSession();
@@ -34,15 +35,31 @@ const Navbar = () => {
               </motion.a>
             ))}
             {status === "authenticated" ? (
-              <div onClick={() => signOut()} tabIndex={0} role="button">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-1.5 mr-2 text-purple-gradient-end border border-purple-gradient-end bg-white rounded-lg font-medium shadow-md"
+              <>
+                <Link href={"/map"}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-4 py-1.5 mr-2 text-purple-gradient-end border border-purple-gradient-end bg-white rounded-lg font-medium shadow-md"
+                  >
+                    Dashboard
+                  </motion.button>
+                </Link>
+                <div
+                  onClick={() => signOut()}
+                  tabIndex={0}
+                  role="button"
+                  className="!m-0"
                 >
-                  Logout
-                </motion.button>
-              </div>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-4 py-1.5 text-purple-gradient-end border border-purple-gradient-end bg-white rounded-lg font-medium shadow-md"
+                  >
+                    Logout
+                  </motion.button>
+                </div>
+              </>
             ) : (
               <div>
                 <Link href={"/login"}>
@@ -120,14 +137,47 @@ const Navbar = () => {
                   {item}
                 </motion.a>
               ))}
-              <Link href={"/signup"}>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full px-4 py-2 mt-2 font-medium text-white rounded-lg shadow-md bg-primary-gradient"
-                >
-                  Request Demo
-                </motion.button>
-              </Link>
+              {status === "authenticated" ? (
+                <>
+                  <Link href={"/map"}>
+                    <Button
+                      variant={"link"}
+                      className="px-4 py-1.5 mr-2 text-purple-gradient-end rounded-lg font-medium "
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <div onClick={() => signOut()} tabIndex={0} role="button">
+                    <Button
+                      variant={"link"}
+                      className="px-4 py-1.5 mr-2 text-purple-gradient-end rounded-lg font-medium"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <Link href={"/login"}>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-1.5 mr-2 text-purple-gradient-end border border-purple-gradient-end bg-white rounded-lg font-medium shadow-md"
+                    >
+                      Login
+                    </motion.button>
+                  </Link>
+                  <Link href={"/signup"}>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 font-medium text-white rounded-lg shadow-md bg-primary-gradient"
+                    >
+                      Request Demo
+                    </motion.button>
+                  </Link>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
