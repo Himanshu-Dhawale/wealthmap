@@ -3,7 +3,11 @@ import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { reportSchema } from "@/schema/reportSchema";
-import { ReportFormData } from "@/types/types";
+import {
+  CreateReportResponse,
+  ReportFormData,
+  ReportPropertyType,
+} from "@/types/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import { getSession } from "next-auth/react";
+import { postReq } from "@/lib/axios-helpers/apiClient";
+import { LoaderCircle } from "lucide-react";
 
 const propertyTypeOptions = [
   { id: "LUXURY_HOME", label: "Luxury Home" },
@@ -37,12 +45,6 @@ const wealthSourceOptions = [
 type ReportFormInput = Omit<ReportFormData, "estimatedNetWorth"> & {
   estimatedNetWorth: string;
 };
-type PropertType =
-  | "LUXURY_HOME"
-  | "COMMERCIAL"
-  | "VACATION"
-  | "INVESTMENT"
-  | "SPECIAL_USE";
 
 const CreateReportForm = () => {
   const {
@@ -62,11 +64,41 @@ const CreateReportForm = () => {
 
   const onSubmit = async (data: ReportFormInput) => {
     try {
-    console.log(data)
+      const session = await getSession();
+      const token = session?.user.accessToken;
 
-      reset();
-    } catch (err) {
-      console.error(err);
+      const payload = {
+        fullName: data.fullName,
+        primaryLocation: data.primaryLocation,
+        contactEmail: data.contactEmail,
+        primaryIndustry: data.primaryIndustry,
+        sourceOfWealth: data.sourceOfWealth,
+        propertyTypes: data.propertyTypes,
+        description: data.description,
+        propertyDetails: data.propertyDetails,
+        confidenceScore: data.confidenceScore,
+        lastContactDate: data.lastContactDate,
+        estimatedNetWorth: data.estimatedNetWorth,
+      };
+
+      const response = await postReq<CreateReportResponse>(
+        "/report",
+        payload,
+        token
+      );
+
+      if (response.status === 201) {
+        toast.success("Report created successfully!", {
+          description: "Your report has been generated and saved.",
+        });
+        reset();
+      }
+    } catch (error) {
+      console.error("Error creating report:", error);
+      toast.error("Failed to create report", {
+        description:
+          error instanceof Error ? error.message : "Please try again later",
+      });
     }
   };
 
@@ -85,16 +117,18 @@ const CreateReportForm = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Label htmlFor="name">Full Name*</Label>
+            <Label htmlFor="fullName">Full Name*</Label>
             <Input
-              id="name"
+              id="fullName"
               type="text"
-              {...register("name")}
+              {...register("fullName")}
               placeholder="John Billionaire"
-              className={errors.name ? "border-red-500" : ""}
+              className={errors.fullName ? "border-red-500" : ""}
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+            {errors.fullName && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.fullName.message}
+              </p>
             )}
           </motion.div>
 
@@ -111,6 +145,7 @@ const CreateReportForm = () => {
               type="text"
               {...register("estimatedNetWorth")}
               placeholder="$2,100,000,000"
+              // onChange={handleNetWorthChange}
               className={errors.estimatedNetWorth ? "border-red-500" : ""}
             />
             {errors.estimatedNetWorth && (
@@ -131,17 +166,17 @@ const CreateReportForm = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <Label htmlFor="location">Primary Location*</Label>
+            <Label htmlFor="primaryLocation">Primary Location*</Label>
             <Input
-              id="location"
+              id="primaryLocation"
               type="text"
-              {...register("location")}
+              {...register("primaryLocation")}
               placeholder="New York, NY"
-              className={errors.location ? "border-red-500" : ""}
+              className={errors.primaryLocation ? "border-red-500" : ""}
             />
-            {errors.location && (
+            {errors.primaryLocation && (
               <p className="mt-1 text-sm text-red-600">
-                {errors.location.message}
+                {errors.primaryLocation.message}
               </p>
             )}
           </motion.div>
@@ -151,17 +186,17 @@ const CreateReportForm = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, delay: 0.3 }}
           >
-            <Label htmlFor="contact">Contact Email*</Label>
+            <Label htmlFor="contactEmail">Contact Email*</Label>
             <Input
-              id="contact"
+              id="contactEmail"
               type="email"
-              {...register("contact")}
+              {...register("contactEmail")}
               placeholder="john@example.com"
-              className={errors.contact ? "border-red-500" : ""}
+              className={errors.contactEmail ? "border-red-500" : ""}
             />
-            {errors.contact && (
+            {errors.contactEmail && (
               <p className="mt-1 text-sm text-red-600">
-                {errors.contact.message}
+                {errors.contactEmail.message}
               </p>
             )}
           </motion.div>
@@ -196,12 +231,12 @@ const CreateReportForm = () => {
           >
             <Label>Source of Wealth*</Label>
             <Controller
-              name="wealthSource"
+              name="sourceOfWealth"
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger
-                    className={errors.wealthSource ? "border-red-500" : ""}
+                    className={errors.sourceOfWealth ? "border-red-500" : ""}
                   >
                     <SelectValue placeholder="Select source" />
                   </SelectTrigger>
@@ -215,9 +250,9 @@ const CreateReportForm = () => {
                 </Select>
               )}
             />
-            {errors.wealthSource && (
+            {errors.sourceOfWealth && (
               <p className="mt-1 text-sm text-red-600">
-                {errors.wealthSource.message}
+                {errors.sourceOfWealth.message}
               </p>
             )}
           </motion.div>
@@ -240,7 +275,9 @@ const CreateReportForm = () => {
                     <Checkbox
                       id={option.id}
                       checked={
-                        field.value?.includes(option.id as PropertType) || false
+                        field.value?.includes(
+                          option.id as ReportPropertyType
+                        ) || false
                       }
                       onCheckedChange={(checked) => {
                         const newValue = checked
@@ -365,27 +402,8 @@ const CreateReportForm = () => {
           >
             {isSubmitting ? (
               <span className="flex items-center">
-                <svg
-                  className="w-4 h-4 mr-2 -ml-1 text-white animate-spin"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Submitting...
+                <LoaderCircle size={20} className="spinner" />
+                Creating report...
               </span>
             ) : (
               "Submit Report"
