@@ -48,11 +48,13 @@ const DashboardSidebar = () => {
                 href="/members"
               />
             )}
-            <DashboardNavItem
-              icon={<Settings size={20} />}
-              label="Settings"
-              href="/settings"
-            />
+            {status === "authenticated" && data?.user.role === "EMPLOYEE" && (
+              <DashboardNavItem
+                icon={<Settings size={20} />}
+                label="Settings"
+                href="/settings"
+              />
+            )}
           </nav>
         </div>
       </div>
