@@ -1,1 +1,1 @@
-const REPORT = '/report'
+export const REPORT = '/report'

@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Report } from "@/types/types";
 import { getReq } from "../../../lib/axios-helpers/apiClient";
 import { useSession } from "next-auth/react";
+import { REPORT } from "../../../endpoints/report.endpoint";
 export default function ReportsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<("New" | "Reviewed")[]>(
