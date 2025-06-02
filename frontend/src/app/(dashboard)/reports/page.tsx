@@ -1,15 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import {Report} from "@/types/types";
+import { Report } from "@/types/types";
+import { getReq } from "../../../lib/axios-helpers/apiClient";
+import { useSession } from "next-auth/react";
 export default function ReportsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<("New" | "Reviewed")[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<("New" | "Reviewed")[]>(
+    []
+  );
   const [reports] = useState<Report[]>([
     {
       id: "1",
@@ -48,22 +52,36 @@ export default function ReportsPage() {
       status: "New",
     },
   ]);
+  const session = useSession()
+  const token = session.data?.user.accessToken
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await getReq(REPORT,{},token);
+        console.log(response)
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [token]);
 
   const filteredReports = reports.filter((report) => {
-    const matchesSearch = report.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         report.address.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesStatus = selectedStatus.length === 0 || 
-                         selectedStatus.includes(report.status);
-    
+    const matchesSearch =
+      report.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      report.address.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      selectedStatus.length === 0 || selectedStatus.includes(report.status);
+
     return matchesSearch && matchesStatus;
   });
 
-  const newCount = reports.filter(r => r.status === "New").length;
-  const reviewedCount = reports.filter(r => r.status === "Reviewed").length;
+  const newCount = reports.filter((r) => r.status === "New").length;
+  const reviewedCount = reports.filter((r) => r.status === "Reviewed").length;
 
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div className="min-h-screen p-6 bg-gradient-to-br from-gray-50 to-gray-100">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,9 +90,9 @@ export default function ReportsPage() {
       >
         <Card className="shadow-xl">
           <CardHeader>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <CardTitle className="text-2xl">REPORTS</CardTitle>
-              
+
               <div className="relative w-full md:w-64">
                 <Input
                   placeholder="Search reports..."
@@ -84,7 +102,7 @@ export default function ReportsPage() {
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 absolute left-3 top-3 text-gray-400"
+                  className="absolute w-4 h-4 text-gray-400 left-3 top-3"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -98,8 +116,8 @@ export default function ReportsPage() {
                 </svg>
               </div>
             </div>
-            
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4">
+
+            <div className="flex flex-col justify-between gap-4 pt-4 sm:flex-row sm:items-center">
               <div className="flex items-center gap-4">
                 <Button variant="ghost" className="font-medium">
                   All {reports.length}
@@ -111,18 +129,20 @@ export default function ReportsPage() {
                   Reviewed {reviewedCount}
                 </Button>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Filter</span>
                 <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="new-filter" 
+                  <Checkbox
+                    id="new-filter"
                     checked={selectedStatus.includes("New")}
                     onCheckedChange={(checked) => {
                       if (checked) {
                         setSelectedStatus([...selectedStatus, "New"]);
                       } else {
-                        setSelectedStatus(selectedStatus.filter(s => s !== "New"));
+                        setSelectedStatus(
+                          selectedStatus.filter((s) => s !== "New")
+                        );
                       }
                     }}
                   />
@@ -134,14 +154,16 @@ export default function ReportsPage() {
                   </label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="reviewed-filter" 
+                  <Checkbox
+                    id="reviewed-filter"
                     checked={selectedStatus.includes("Reviewed")}
                     onCheckedChange={(checked) => {
                       if (checked) {
                         setSelectedStatus([...selectedStatus, "Reviewed"]);
                       } else {
-                        setSelectedStatus(selectedStatus.filter(s => s !== "Reviewed"));
+                        setSelectedStatus(
+                          selectedStatus.filter((s) => s !== "Reviewed")
+                        );
                       }
                     }}
                   />
@@ -155,7 +177,7 @@ export default function ReportsPage() {
               </div>
             </div>
           </CardHeader>
-          
+
           <CardContent>
             <div className="space-y-4">
               <AnimatePresence>
@@ -167,18 +189,26 @@ export default function ReportsPage() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Card className="hover:shadow-md transition-shadow">
+                    <Card className="transition-shadow hover:shadow-md">
                       <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                           <div>
                             <h3 className="font-medium">{report.name}</h3>
-                            <p className="text-sm text-gray-600">{report.address}</p>
+                            <p className="text-sm text-gray-600">
+                              {report.address}
+                            </p>
                           </div>
-                          
+
                           <div className="flex items-center gap-4">
-                            <span className="text-sm text-gray-500">{report.date}</span>
-                            <Badge 
-                              variant={report.status === "New" ? "default" : "secondary"}
+                            <span className="text-sm text-gray-500">
+                              {report.date}
+                            </span>
+                            <Badge
+                              variant={
+                                report.status === "New"
+                                  ? "default"
+                                  : "secondary"
+                              }
                               className="min-w-[80px] justify-center"
                             >
                               {report.status}
@@ -190,12 +220,12 @@ export default function ReportsPage() {
                   </motion.div>
                 ))}
               </AnimatePresence>
-              
+
               {filteredReports.length === 0 && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center py-8 text-gray-500"
+                  className="py-8 text-center text-gray-500"
                 >
                   No reports found matching your criteria
                 </motion.div>
