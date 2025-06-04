@@ -8,9 +8,11 @@ const passwordSchema = z
 	.regex(/\d/, 'Password must contain at least one number')
 	.regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character');
 
+const emailSchema = z.string().email('Invalid email address');
+
 export const RegisterSchema = z.object({
 	name: z.string().min(2, 'Company name must be at least 2 characters'),
-	email: z.string().email('Invalid email address'),
+	email: emailSchema,
 	password: passwordSchema,
 	logo: z.string().min(1, 'Logo is required'),
 	firstName: z.string().min(2, 'First name must be at least 4 characters'),
@@ -20,6 +22,9 @@ export const RegisterSchema = z.object({
 });
 
 export const LoginSchema = z.object({
-	email: z.string().email('Invalid email address'),
+	email: emailSchema,
 	password: z.string().min(8, 'Password is required'),
 });
+
+export const EmailSchema = z.object({ email: z.string().email() });
+export const ResetPasswordSchema = z.object({ token: z.string(), newPassword: z.string().min(8) });
