@@ -30,6 +30,7 @@ model User {
   isActive      Boolean    @default(true)
   mfaEnabled    Boolean    @default(false)
   mfaSecret     String?
+  emailVerified Boolean    @default(false)
   acceptedTerms Boolean    @default(false)
   status        UserStatus @default(ACCEPTED)
   companyId     String
@@ -42,6 +43,10 @@ model User {
   PropertyBookmark PropertyBookmark[]
 
   Report Report[]
+
+  EmailVerificationToken EmailVerificationToken[]
+
+  PasswordResetToken PasswordResetToken[]
 }
 
 model Invitation {
@@ -110,6 +115,24 @@ model Report {
 
   createdBy User    @relation(fields: [createdById], references: [id])
   company   Company @relation(fields: [companyId], references: [id])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum ReportStatus {
