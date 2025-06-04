@@ -170,14 +170,6 @@ export type AuthState = {
   fetch2FAStatus: () => Promise<void>;
 };
 
-export interface Report {
-  id: string;
-  name: string;
-  address: string;
-  date: string;
-  status: "New" | "Reviewed";
-}
-
 export type WealthAnalysisResult = {
   name: string;
   email: string;
@@ -186,3 +178,49 @@ export type WealthAnalysisResult = {
   wealthSource: string;
   lastUpdated: string;
 };
+
+export type ReportPropertyType =
+  | "LUXURY_HOME"
+  | "COMMERCIAL"
+  | "VACATION"
+  | "INVESTMENT"
+  | "SPECIAL_USE";
+
+export enum ContactStatus {
+  NEW = "NEW",
+  REVIEWED = "REVIEWED",
+}
+export enum SourceOfWealth {
+  REAL_ESTATE = "REAL_ESTATE",
+  INHERITANCE = "INHERITANCE",
+  ENTREPRENEURSHIP = "ENTREPRENEURSHIP",
+  INVESTMENTS = "INVESTMENTS",
+  TECH = "TECH",
+  OTHER = "OTHER",
+}
+
+export interface Report {
+  id: string;
+  fullName: string;
+  estimatedNetWorth: number;
+  primaryLocation: string;
+  contactEmail: string;
+  primaryIndustry: string;
+  sourceOfWealth: SourceOfWealth;
+  propertyTypes: ReportPropertyType[];
+  description: string;
+  propertyDetails: string;
+  confidenceScore: number;
+  lastContactDate: string;
+  status: ContactStatus;
+  createdById: string;
+  companyId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateReportResponse {
+  id: string;
+  message: string;
+  report?: Report;
+}
