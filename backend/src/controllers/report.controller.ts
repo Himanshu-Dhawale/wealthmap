@@ -53,6 +53,9 @@ export async function markReportReviewed(c: Context) {
 	const report = await prisma.report.findFirst({ where: { id: reportId, companyId } });
 	if (!report) return c.json({ message: 'Report not found' }, 404);
 
-	await prisma.report.update({ where: { id: reportId }, data: { status: ReportStatus.REVIEWED } });
-	return c.json({ message: 'Report marked as reviewed' });
+	const updatedReport = await prisma.report.update({
+		where: { id: reportId },
+		data: { status: ReportStatus.REVIEWED },
+	});
+	return c.json({ message: 'Report marked as reviewed', report: updatedReport });
 }
