@@ -2,7 +2,7 @@ import { Context } from 'hono';
 import { AcceptInvitationSchema, InviteEmployeeSchema } from '../schema/invitation.schema';
 import { getPrismaClient } from '../utils/prisma';
 import { hashPassword } from '../utils/auth.utils';
-import { sendInvitationEmail } from '../utils/email';
+import { sendEmail } from '../utils/email';
 
 export async function inviteEmployee(c: Context) {
 	try {
@@ -36,7 +36,14 @@ export async function inviteEmployee(c: Context) {
 
 		const inviteLink = `${c.env.FRONTEND_URL}/onboarding/accept?token=${invitation.id}`;
 
-		await sendInvitationEmail(email, inviteLink);
+		await sendEmail(
+			email,
+			"You're invited to join the company on WealthMap!",
+			`
+		<p>You've been invited to join WealthMap.</p>
+		<p>Click <a href="${inviteLink}">here</a> to accept the invitation.</p>
+	  `,
+		);
 
 		return c.json({ message: 'Invitation sent', invitationId: invitation.id });
 	} catch (err) {
