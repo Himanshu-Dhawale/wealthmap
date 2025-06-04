@@ -2,9 +2,16 @@ import { Context } from 'hono';
 import { Jwt } from 'hono/utils/jwt';
 import { hashPassword } from '../utils/auth.utils';
 import { getPrismaClient } from '../utils/prisma';
-import { LoginSchema, RegisterSchema } from '../schema/auth.schema';
+import {
+	EmailSchema,
+	LoginSchema,
+	RegisterSchema,
+	ResetPasswordSchema,
+} from '../schema/auth.schema';
 import { uploadToCloudinaryUnsigned } from '../utils/cloudinary';
 import { generateMfaSecret, verifyMfaToken } from '../utils/mfa';
+import { generateToken } from '../utils/token';
+import { sendEmail } from '../utils/email';
 export async function registerCompany(c: Context) {
 	try {
 		const validation = RegisterSchema.safeParse(await c.req.json());
@@ -213,4 +220,95 @@ export async function getMfaStatus(c: Context) {
 	if (!user) return c.json({ message: 'User not found' }, 404);
 
 	return c.json({ mfaEnabled: user.mfaEnabled });
+}
+
+export async function requestEmailVerification(c: Context) {
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
+	const body = await c.req.json();
+	const parsed = EmailSchema.safeParse(body);
+	if (!parsed.success) return c.json({ message: 'Invalid email' }, 400);
+
+	const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
+	if (!user) return c.json({ message: 'User not found' }, 404);
+	const token = generateToken();
+	await prisma.emailVerificationToken.create({
+		data: {
+			userId: user.id,
+			token,
+			expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+		},
+	});
+
+	await sendEmail(
+		user.email,
+		'Verify Your Email',
+		`Click <a href="${c.env.FRONTEND_URL}/verify-email?token=${token}">here</a> to verify your email.`,
+	);
+
+	return c.json({ message: 'Verification email sent' });
+}
+
+export async function verifyEmail(c: Context) {
+	const token = c.req.query('token');
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
+
+	const record = await prisma.emailVerificationToken.findUnique({ where: { token } });
+	if (!record || record.expiresAt < new Date()) {
+		return c.json({ message: 'Token expired or invalid' }, 400);
+	}
+
+	await prisma.user.update({ where: { id: record.userId }, data: { emailVerified: true } });
+	await prisma.emailVerificationToken.delete({ where: { token } });
+
+	return c.json({ message: 'Email verified successfully' });
+}
+
+export async function forgotPassword(c: Context) {
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
+	const body = await c.req.json();
+	const parsed = EmailSchema.safeParse(body);
+	if (!parsed.success) return c.json({ message: 'Invalid email' }, 400);
+
+	const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
+	if (!user) return c.json({ message: 'User not found' }, 404);
+
+	const token = generateToken();
+	await prisma.passwordResetToken.create({
+		data: {
+			userId: user.id,
+			token,
+			expiresAt: new Date(Date.now() + 1000 * 60 * 30),
+		},
+	});
+
+	await sendEmail(
+		user.email,
+		'Password Reset',
+		`Reset your password by clicking <a href="${c.env.FRONTEND_URL}/reset-password?token=${token}">here</a>.`,
+	);
+
+	return c.json({ message: 'Reset email sent' });
+}
+
+export async function resetPassword(c: Context) {
+	const prisma = getPrismaClient(c.env.DATABASE_URL);
+	const body = await c.req.json();
+	const parsed = ResetPasswordSchema.safeParse(body);
+
+	if (!parsed.success) return c.json({ message: 'Invalid input' }, 400);
+
+	const record = await prisma.passwordResetToken.findUnique({
+		where: { token: parsed.data.token },
+	});
+	if (!record || record.expiresAt < new Date()) {
+		return c.json({ message: 'Token expired or invalid' }, 400);
+	}
+
+	await prisma.user.update({
+		where: { id: record.userId },
+		data: { passwordHash: await hashPassword(parsed.data.newPassword) },
+	});
+
+	await prisma.passwordResetToken.delete({ where: { token: parsed.data.token } });
+	return c.json({ message: 'Password updated successfully' });
 }
