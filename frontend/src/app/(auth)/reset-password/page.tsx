@@ -19,6 +19,7 @@ const ResetPassword = () => {
   });
   const router = useRouter();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSubmit = async (data: ForgotPasswordFormData) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000)); 
