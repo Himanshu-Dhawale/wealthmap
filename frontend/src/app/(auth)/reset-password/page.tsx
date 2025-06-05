@@ -19,17 +19,17 @@ const ResetPassword = () => {
   });
   const router = useRouter();
 
-  const onSubmit = async (data: ForgotPasswordFormData) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); 
-      
-      toast.success("Password reset link sent to your email!");
-      router.push("/login");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to send reset link. Please try again.");
-    }
-  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onSubmit = async (_data: ForgotPasswordFormData) => {
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    toast.success("Password reset link sent to your email!");
+    router.push("/login");
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to send reset link. Please try again.");
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-50 to-gray-100">
