@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { LoginFormData } from "@/types/types";
 import { loginSchema } from "@/schema/loginSchema";
-import { loggingInUser } from "../../lib/utils";
+import { loggingInUser } from "../../../lib/utils";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 

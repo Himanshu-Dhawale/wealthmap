@@ -9,10 +9,10 @@ import { signupSchema } from "@/schema/signupSchema";
 import { SignupFormData } from "@/types/types";
 import RegisterAdminForm from "@/components/RegisterAdminForm";
 import CompanyRegisterForm from "@/components/CompanyRegisterForm";
-import { postReq } from "../../lib/axios-helpers/apiClient";
-import { SIGNUP } from "../../endpoints/auth.endpoint";
-import { fileToBase64, loggingInUser } from "../../lib/utils";
-import { SignInPayload } from "../../types/auth/login";
+import { postReq } from "../../../lib/axios-helpers/apiClient";
+import { SIGNUP } from "../../../endpoints/auth.endpoint";
+import { fileToBase64, loggingInUser } from "../../../lib/utils";
+import { SignInPayload } from "../../../types/auth/login";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
