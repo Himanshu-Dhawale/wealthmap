@@ -1,3 +1,4 @@
+import { forgotPasswordSchema } from "@/schema/forgotPasswordSchema";
 import { loginSchema } from "@/schema/loginSchema";
 import { onboardingSchema } from "@/schema/onboardingSchema";
 import { reportSchema } from "@/schema/reportSchema";
@@ -29,6 +30,7 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type OnboardingFormData = z.infer<typeof onboardingSchema>;
 export type ReportFormData = z.infer<typeof reportSchema>;
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export type PropertyType = "residential" | "commercial" | "other" | "all";
 
